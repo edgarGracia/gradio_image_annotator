@@ -1,0 +1,31 @@
+{
+  "name": "gradio_image_annotator",
+  "version": "0.9.3",
+  "description": "Gradio UI packages",
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "private": false,
+  "dependencies": {
+    "@gradio/atoms": "0.5.3",
+    "@gradio/button": "^0.2.24",
+    "@gradio/client": "0.12.1",
+    "@gradio/colorpicker": "^0.2.11",
+    "@gradio/icons": "0.3.3",
+    "@gradio/statustracker": "0.4.8",
+    "@gradio/upload": "0.7.4",
+    "@gradio/utils": "0.3.0",
+    "@gradio/wasm": "0.6.0",
+    "cropperjs": "^1.5.12",
+    "lazy-brush": "^1.0.1",
+    "resize-observer-polyfill": "^1.5.1"
+  },
+  "main_changeset": true,
+  "main": "./Index.svelte",
+  "exports": {
+    ".": "./Index.svelte",
+    "./shared": "./shared/index.ts",
+    "./example": "./Example.svelte",
+    "./package.json": "./package.json"
+  }
+}
