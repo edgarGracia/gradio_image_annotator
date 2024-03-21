@@ -18,10 +18,10 @@ with gr.Blocks(
 ) as demo:
     gr.Markdown(
 """
-# `gradio_image_annotator`
+# `gradio_image_annotation`
 
 <div style="display: flex; gap: 7px;">
-<a href="https://pypi.org/project/gradio_image_annotator/" target="_blank"><img alt="PyPI - Version" src="https://img.shields.io/pypi/v/gradio_image_annotator"></a>  
+<a href="https://pypi.org/project/gradio_image_annotation/" target="_blank"><img alt="PyPI - Version" src="https://img.shields.io/pypi/v/gradio_image_annotation"></a>  
 </div>
 
 A component that can be used to annotate images with bounding boxes.
@@ -32,14 +32,14 @@ A component that can be used to annotate images with bounding boxes.
 ## Installation
 
 ```bash
-pip install gradio_image_annotator
+pip install gradio_image_annotation
 ```
 
 ## Usage
 
 ```python
 import gradio as gr
-from gradio_image_annotator import image_annotator
+from gradio_image_annotation import image_annotator
 
 example = {
     "image": "https://raw.githubusercontent.com/gradio-app/gradio/main/guides/assets/logo.png",

@@ -1,20 +1,20 @@
 
-# `gradio_image_annotator`
-<a href="https://pypi.org/project/gradio_image_annotator/" target="_blank"><img alt="PyPI - Version" src="https://img.shields.io/pypi/v/gradio_image_annotator"></a>  
+# `gradio_image_annotation`
+<a href="https://pypi.org/project/gradio_image_annotation/" target="_blank"><img alt="PyPI - Version" src="https://img.shields.io/pypi/v/gradio_image_annotation"></a>  
 
 A component that can be used to annotate images with bounding boxes.
 
 ## Installation
 
 ```bash
-pip install gradio_image_annotator
+pip install gradio_image_annotation
 ```
 
 ## Usage
 
 ```python
 import gradio as gr
-from gradio_image_annotator import image_annotator
+from gradio_image_annotation import image_annotator
 
 example = {
     "image": "https://raw.githubusercontent.com/gradio-app/gradio/main/guides/assets/logo.png",
@@ -406,6 +406,26 @@ bool | None
 | `upload` | This listener is triggered when the user uploads a file into the image_annotator. |
 
 
+
+### User function
+
+The impact on the users predict function varies depending on whether the component is used as an input or output for an event (or both).
+
+- When used as an Input, the component only impacts the input signature of the user function.
+- When used as an output, the component only impacts the return signature of the user function.
+
+The code snippet below is accurate in cases where the component is used as both an input and an output.
+
+- **As output:** Is passed, a dict with the image and boxes or None.
+- **As input:** Should return, a dict with an image and an optional list of boxes or None.
+
+ ```python
+ def predict(
+     value: dict | None
+ ) -> dict | None:
+     return value
+ ```
+ 
 ## Screenshots
 ![](images/demo_1.png)
 ![](images/demo_2.png)

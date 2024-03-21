@@ -1,5 +1,5 @@
 import gradio as gr
-from gradio_image_annotator import image_annotator
+from gradio_image_annotation import image_annotator
 
 example = {
     "image": "https://raw.githubusercontent.com/gradio-app/gradio/main/guides/assets/logo.png",

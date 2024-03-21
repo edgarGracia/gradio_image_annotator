@@ -7,8 +7,8 @@ requires = [
 build-backend = "hatchling.build"
 
 [project]
-name = "gradio_image_annotator"
-version = "0.0.1"
+name = "gradio_image_annotation"
+version = "0.0.2"
 description = "A component that can be used to annotate images with bounding boxes."
 readme = "README.md"
 license = "MIT"
@@ -36,7 +36,7 @@ classifiers = [
 dev = ["build", "twine"]
 
 [tool.hatch.build]
-artifacts = ["/backend/gradio_image_annotator/templates", "*.pyi", "backend/gradio_image_annotator/templates"]
+artifacts = ["/backend/gradio_image_annotation/templates", "*.pyi", "backend/gradio_image_annotation/templates", "backend/gradio_image_annotation/templates", "backend/gradio_image_annotation/templates", "backend/gradio_image_annotation/templates", "backend/gradio_image_annotation/templates", "backend/gradio_image_annotation/templates"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["/backend/gradio_image_annotator"]
+packages = ["/backend/gradio_image_annotation"]
