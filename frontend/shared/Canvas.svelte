@@ -225,12 +225,14 @@
 				canvasYmax = canvas.height;
 				canvas.height = canvas.clientHeight;
 			}
-			for (const box of value.boxes) {
-				box.canvasXmin = canvasXmin;
-				box.canvasYmin = canvasYmin;
-				box.canvasXmax = canvasXmax;
-				box.canvasYmax = canvasYmax;
-				box.setScaleFactor(scaleFactor);
+			if (canvasXmax > 0 && canvasYmax > 0){
+				for (const box of value.boxes) {
+					box.canvasXmin = canvasXmin;
+					box.canvasYmin = canvasYmin;
+					box.canvasXmax = canvasXmax;
+					box.canvasYmax = canvasYmax;
+					box.setScaleFactor(scaleFactor);
+				}
 			}
 			draw();
 			dispatch("change");
