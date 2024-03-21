@@ -5375,7 +5375,7 @@ function Il(e) {
     e[9]
   ), {
     c() {
-      t = ae("div"), n = ae("div"), i = ae("span"), r = ae("div"), et(s.$$.fragment), u = Xt(), o = ae("div"), et(a.$$.fragment), f = Xt(), l = ae("div"), et(h.$$.fragment), c = Xt(), _ = ae("div"), et(g.$$.fragment), it(r, "margin-right", "10px"), it(o, "margin-right", "40px"), it(o, "margin-bottom", "8px"), it(l, "margin-right", "8px"), $e(i, "class", "model-content svelte-nh1w43"), $e(n, "class", "modal-container svelte-nh1w43"), $e(t, "class", "modal svelte-nh1w43"), $e(t, "id", "model-box-edit");
+      t = ae("div"), n = ae("div"), i = ae("span"), r = ae("div"), et(s.$$.fragment), u = Xt(), o = ae("div"), et(a.$$.fragment), f = Xt(), l = ae("div"), et(h.$$.fragment), c = Xt(), _ = ae("div"), et(g.$$.fragment), it(r, "margin-right", "10px"), it(o, "margin-right", "40px"), it(o, "margin-bottom", "8px"), it(l, "margin-right", "8px"), $e(i, "class", "model-content svelte-hkn2q1"), $e(n, "class", "modal-container svelte-hkn2q1"), $e(t, "class", "modal svelte-hkn2q1"), $e(t, "id", "model-box-edit");
     },
     m(d, b) {
       pn(d, t, b), $(t, n), $(n, i), $(i, r), nt(s, r, null), $(i, u), $(i, o), nt(a, o, null), $(i, f), $(i, l), nt(h, l, null), $(i, c), $(i, _), nt(g, _, null), m = !0;
@@ -6012,8 +6012,9 @@ function jl(e, t, n) {
         }
       else
         g = 0, m = 0, d = l.width, b = l.height, n(4, l.height = l.clientHeight, l);
-      for (const P of o.boxes)
-        P.canvasXmin = g, P.canvasYmin = m, P.canvasXmax = d, P.canvasYmax = b, P.setScaleFactor(y);
+      if (d > 0 && b > 0)
+        for (const P of o.boxes)
+          P.canvasXmin = g, P.canvasYmin = m, P.canvasXmax = d, P.canvasYmax = b, P.setScaleFactor(y);
       w(), C("change");
     }
   }

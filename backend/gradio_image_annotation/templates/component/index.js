@@ -399,7 +399,7 @@ function Ss(t) {
   let e, n;
   return e = new Eu({
     props: {
-      $$slots: { default: [zu] },
+      $$slots: { default: [qu] },
       $$scope: { ctx: t }
     }
   }), {
@@ -425,7 +425,7 @@ function Ss(t) {
     }
   };
 }
-function zu(t) {
+function qu(t) {
   let e;
   return {
     c() {
@@ -450,7 +450,7 @@ function zu(t) {
     }
   };
 }
-function qu(t) {
+function zu(t) {
   let e, n, i, l;
   const s = (
     /*#slots*/
@@ -534,7 +534,7 @@ function ju(t, e, n) {
 }
 class vr extends ku {
   constructor(e) {
-    super(), Iu(this, e, ju, qu, Ou, { show_label: 0, info: 1 });
+    super(), Iu(this, e, ju, zu, Ou, { show_label: 0, info: 1 });
   }
 }
 const {
@@ -1041,8 +1041,8 @@ const {
   append: Ji,
   attr: Ue,
   detach: Ff,
-  init: zf,
-  insert: qf,
+  init: qf,
+  insert: zf,
   noop: Qi,
   safe_not_equal: jf,
   set_style: Ge,
@@ -1055,7 +1055,7 @@ function Gf(t) {
       e = Wn("svg"), n = Wn("g"), i = Wn("path"), l = Wn("path"), Ue(i, "d", "M18,6L6.087,17.913"), Ge(i, "fill", "none"), Ge(i, "fill-rule", "nonzero"), Ge(i, "stroke-width", "2px"), Ue(n, "transform", "matrix(1.14096,-0.140958,-0.140958,1.14096,-0.0559523,0.0559523)"), Ue(l, "d", "M4.364,4.364L19.636,19.636"), Ge(l, "fill", "none"), Ge(l, "fill-rule", "nonzero"), Ge(l, "stroke-width", "2px"), Ue(e, "width", "100%"), Ue(e, "height", "100%"), Ue(e, "viewBox", "0 0 24 24"), Ue(e, "version", "1.1"), Ue(e, "xmlns", "http://www.w3.org/2000/svg"), Ue(e, "xmlns:xlink", "http://www.w3.org/1999/xlink"), Ue(e, "xml:space", "preserve"), Ue(e, "stroke", "currentColor"), Ge(e, "fill-rule", "evenodd"), Ge(e, "clip-rule", "evenodd"), Ge(e, "stroke-linecap", "round"), Ge(e, "stroke-linejoin", "round");
     },
     m(s, o) {
-      qf(s, e, o), Ji(e, n), Ji(n, i), Ji(e, l);
+      zf(s, e, o), Ji(e, n), Ji(n, i), Ji(e, l);
     },
     p: Qi,
     i: Qi,
@@ -1067,7 +1067,7 @@ function Gf(t) {
 }
 class kr extends Uf {
   constructor(e) {
-    super(), zf(this, e, null, Gf, jf, {});
+    super(), qf(this, e, null, Gf, jf, {});
   }
 }
 const {
@@ -1238,7 +1238,7 @@ let Sr = class extends Ec {
 const {
   SvelteComponent: Tc,
   append: Hc,
-  attr: zt,
+  attr: qt,
   detach: Pc,
   init: Nc,
   insert: Lc,
@@ -1250,7 +1250,7 @@ function Mc(t) {
   let e, n;
   return {
     c() {
-      e = Ls("svg"), n = Ls("path"), zt(n, "fill", "currentColor"), zt(n, "d", "M13.75 2a2.25 2.25 0 0 1 2.236 2.002V4h1.764A2.25 2.25 0 0 1 20 6.25V11h-1.5V6.25a.75.75 0 0 0-.75-.75h-2.129c-.404.603-1.091 1-1.871 1h-3.5c-.78 0-1.467-.397-1.871-1H6.25a.75.75 0 0 0-.75.75v13.5c0 .414.336.75.75.75h4.78a3.99 3.99 0 0 0 .505 1.5H6.25A2.25 2.25 0 0 1 4 19.75V6.25A2.25 2.25 0 0 1 6.25 4h1.764a2.25 2.25 0 0 1 2.236-2h3.5Zm2.245 2.096L16 4.25c0-.052-.002-.103-.005-.154ZM13.75 3.5h-3.5a.75.75 0 0 0 0 1.5h3.5a.75.75 0 0 0 0-1.5ZM15 12a3 3 0 0 0-3 3v5c0 .556.151 1.077.415 1.524l3.494-3.494a2.25 2.25 0 0 1 3.182 0l3.494 3.494c.264-.447.415-.968.415-1.524v-5a3 3 0 0 0-3-3h-5Zm0 11a2.985 2.985 0 0 1-1.524-.415l3.494-3.494a.75.75 0 0 1 1.06 0l3.494 3.494A2.985 2.985 0 0 1 20 23h-5Zm5-7a1 1 0 1 1 0-2a1 1 0 0 1 0 2Z"), zt(e, "xmlns", "http://www.w3.org/2000/svg"), zt(e, "width", "100%"), zt(e, "height", "100%"), zt(e, "viewBox", "0 0 24 24");
+      e = Ls("svg"), n = Ls("path"), qt(n, "fill", "currentColor"), qt(n, "d", "M13.75 2a2.25 2.25 0 0 1 2.236 2.002V4h1.764A2.25 2.25 0 0 1 20 6.25V11h-1.5V6.25a.75.75 0 0 0-.75-.75h-2.129c-.404.603-1.091 1-1.871 1h-3.5c-.78 0-1.467-.397-1.871-1H6.25a.75.75 0 0 0-.75.75v13.5c0 .414.336.75.75.75h4.78a3.99 3.99 0 0 0 .505 1.5H6.25A2.25 2.25 0 0 1 4 19.75V6.25A2.25 2.25 0 0 1 6.25 4h1.764a2.25 2.25 0 0 1 2.236-2h3.5Zm2.245 2.096L16 4.25c0-.052-.002-.103-.005-.154ZM13.75 3.5h-3.5a.75.75 0 0 0 0 1.5h3.5a.75.75 0 0 0 0-1.5ZM15 12a3 3 0 0 0-3 3v5c0 .556.151 1.077.415 1.524l3.494-3.494a2.25 2.25 0 0 1 3.182 0l3.494 3.494c.264-.447.415-.968.415-1.524v-5a3 3 0 0 0-3-3h-5Zm0 11a2.985 2.985 0 0 1-1.524-.415l3.494-3.494a.75.75 0 0 1 1.06 0l3.494 3.494A2.985 2.985 0 0 1 20 23h-5Zm5-7a1 1 0 1 1 0-2a1 1 0 0 1 0 2Z"), qt(e, "xmlns", "http://www.w3.org/2000/svg"), qt(e, "width", "100%"), qt(e, "height", "100%"), qt(e, "viewBox", "0 0 24 24");
     },
     m(i, l) {
       Lc(i, e, l), Hc(e, n);
@@ -1279,7 +1279,7 @@ const {
   safe_not_equal: Fc,
   svg_element: gn
 } = window.__gradio__svelte__internal;
-function zc(t) {
+function qc(t) {
   let e, n, i, l, s;
   return {
     c() {
@@ -1296,9 +1296,9 @@ function zc(t) {
     }
   };
 }
-class qc extends Oc {
+class zc extends Oc {
   constructor(e) {
-    super(), Rc(this, e, null, zc, Fc, {});
+    super(), Rc(this, e, null, qc, Fc, {});
   }
 }
 const {
@@ -1821,7 +1821,7 @@ const {
   mount_component: Hr,
   safe_not_equal: y_,
   set_data: Fl,
-  space: zl,
+  space: ql,
   text: yn,
   toggle_class: Os,
   transition_in: pi,
@@ -1878,7 +1878,7 @@ function Ds(t) {
   ), a;
   return {
     c() {
-      e = Ul("span"), n = yn("- "), l = yn(i), s = yn(" -"), o = zl(), a = yn(r), Rl(e, "class", "or svelte-kzcjhc");
+      e = Ul("span"), n = yn("- "), l = yn(i), s = yn(" -"), o = ql(), a = yn(r), Rl(e, "class", "or svelte-kzcjhc");
     },
     m(u, f) {
       di(u, e, f), St(e, n), St(e, l), St(e, s), di(u, o, f), di(u, a, f);
@@ -1922,7 +1922,7 @@ function S_(t) {
   );
   return {
     c() {
-      e = Ul("div"), n = Ul("span"), l.c(), s = zl(), r = yn(o), a = zl(), c && c.c(), Rl(n, "class", "icon-wrap svelte-kzcjhc"), Os(
+      e = Ul("div"), n = Ul("span"), l.c(), s = ql(), r = yn(o), a = ql(), c && c.c(), Rl(n, "class", "icon-wrap svelte-kzcjhc"), Os(
         n,
         "hovered",
         /*hovered*/
@@ -2025,7 +2025,7 @@ function Rs(t) {
   ), r, a = (
     /*sources*/
     t[1].includes("clipboard")
-  ), u, f = n && Us(t), _ = l && Fs(t), h = o && zs(t), c = a && qs(t);
+  ), u, f = n && Us(t), _ = l && Fs(t), h = o && qs(t), c = a && zs(t);
   return {
     c() {
       e = Un("span"), f && f.c(), i = cl(), _ && _.c(), s = cl(), h && h.c(), r = cl(), c && c.c(), Ye(e, "class", "source-selection svelte-1jp3vgd"), Ye(e, "data-testid", "source-select");
@@ -2047,12 +2047,12 @@ function Rs(t) {
       }), En()), m & /*sources*/
       2 && (o = /*sources*/
       d[1].includes("webcam")), o ? h ? (h.p(d, m), m & /*sources*/
-      2 && fe(h, 1)) : (h = zs(d), h.c(), fe(h, 1), h.m(e, r)) : h && (kn(), Ae(h, 1, 1, () => {
+      2 && fe(h, 1)) : (h = qs(d), h.c(), fe(h, 1), h.m(e, r)) : h && (kn(), Ae(h, 1, 1, () => {
         h = null;
       }), En()), m & /*sources*/
       2 && (a = /*sources*/
       d[1].includes("clipboard")), a ? c ? (c.p(d, m), m & /*sources*/
-      2 && fe(c, 1)) : (c = qs(d), c.c(), fe(c, 1), c.m(e, null)) : c && (kn(), Ae(c, 1, 1, () => {
+      2 && fe(c, 1)) : (c = zs(d), c.c(), fe(c, 1), c.m(e, null)) : c && (kn(), Ae(c, 1, 1, () => {
         c = null;
       }), En());
     },
@@ -2110,7 +2110,7 @@ function Us(t) {
 }
 function Fs(t) {
   let e, n, i, l, s;
-  return n = new qc({}), {
+  return n = new zc({}), {
     c() {
       e = Un("button"), Li(n.$$.fragment), Ye(e, "class", "icon svelte-1jp3vgd"), Ye(e, "aria-label", "Record audio"), ct(
         e,
@@ -2147,7 +2147,7 @@ function Fs(t) {
     }
   };
 }
-function zs(t) {
+function qs(t) {
   let e, n, i, l, s;
   return n = new e_({}), {
     c() {
@@ -2186,7 +2186,7 @@ function zs(t) {
     }
   };
 }
-function qs(t) {
+function zs(t) {
   let e, n, i, l, s;
   return n = new Cr({}), {
     c() {
@@ -2363,8 +2363,8 @@ function xs(t, { delay: e = 0, duration: n = 400, easing: i = F_, x: l = 0, y: s
 			opacity: ${a - f * b}`
   };
 }
-const qt = [];
-function z_(t, e) {
+const zt = [];
+function q_(t, e) {
   return {
     subscribe: Fn(t, e).subscribe
   };
@@ -2374,13 +2374,13 @@ function Fn(t, e = Ht) {
   const i = /* @__PURE__ */ new Set();
   function l(r) {
     if (D_(t, r) && (t = r, n)) {
-      const a = !qt.length;
+      const a = !zt.length;
       for (const u of i)
-        u[1](), qt.push(u, t);
+        u[1](), zt.push(u, t);
       if (a) {
-        for (let u = 0; u < qt.length; u += 2)
-          qt[u][0](qt[u + 1]);
-        qt.length = 0;
+        for (let u = 0; u < zt.length; u += 2)
+          zt[u][0](zt[u + 1]);
+        zt.length = 0;
       }
     }
   }
@@ -2400,7 +2400,7 @@ function _n(t, e, n) {
   if (!l.every(Boolean))
     throw new Error("derived() expects stores as input, got a falsy value");
   const s = e.length < 2;
-  return z_(n, (o, r) => {
+  return q_(n, (o, r) => {
     let a = !1;
     const u = [];
     let f = 0, _ = Ht;
@@ -2429,19 +2429,19 @@ function _n(t, e, n) {
 function Vs(t) {
   return Object.prototype.toString.call(t) === "[object Date]";
 }
-function ql(t, e, n, i) {
+function zl(t, e, n, i) {
   if (typeof n == "number" || Vs(n)) {
     const l = i - n, s = (n - e) / (t.dt || 1 / 60), o = t.opts.stiffness * l, r = t.opts.damping * s, a = (o - r) * t.inv_mass, u = (s + a) * t.dt;
     return Math.abs(u) < t.opts.precision && Math.abs(l) < t.opts.precision ? i : (t.settled = !1, Vs(n) ? new Date(n.getTime() + u) : n + u);
   } else {
     if (Array.isArray(n))
       return n.map(
-        (l, s) => ql(t, e[s], n[s], i[s])
+        (l, s) => zl(t, e[s], n[s], i[s])
       );
     if (typeof n == "object") {
       const l = {};
       for (const s in n)
-        l[s] = ql(t, e[s], n[s], i[s]);
+        l[s] = zl(t, e[s], n[s], i[s]);
       return l;
     } else
       throw new Error(`Cannot spring ${typeof n} values`);
@@ -2462,7 +2462,7 @@ function Xs(t, e = {}) {
         opts: m,
         settled: !0,
         dt: (w - o) * 60 / 1e3
-      }, P = ql(C, u, t, f);
+      }, P = zl(C, u, t, f);
       return o = w, u = t, n.set(t = P), C.settled && (r = null), !C.settled;
     })), new Promise((w) => {
       r.promise.then(() => {
@@ -2481,9 +2481,9 @@ function Xs(t, e = {}) {
   return m;
 }
 const {
-  SvelteComponent: q_,
-  append: ze,
-  attr: q,
+  SvelteComponent: z_,
+  append: qe,
+  attr: z,
   component_subscribe: Ws,
   detach: j_,
   element: G_,
@@ -2492,18 +2492,18 @@ const {
   noop: Zs,
   safe_not_equal: X_,
   set_style: Qn,
-  svg_element: qe,
+  svg_element: ze,
   toggle_class: Ys
 } = window.__gradio__svelte__internal, { onMount: W_ } = window.__gradio__svelte__internal;
 function Z_(t) {
   let e, n, i, l, s, o, r, a, u, f, _, h;
   return {
     c() {
-      e = G_("div"), n = qe("svg"), i = qe("g"), l = qe("path"), s = qe("path"), o = qe("path"), r = qe("path"), a = qe("g"), u = qe("path"), f = qe("path"), _ = qe("path"), h = qe("path"), q(l, "d", "M255.926 0.754768L509.702 139.936V221.027L255.926 81.8465V0.754768Z"), q(l, "fill", "#FF7C00"), q(l, "fill-opacity", "0.4"), q(l, "class", "svelte-43sxxs"), q(s, "d", "M509.69 139.936L254.981 279.641V361.255L509.69 221.55V139.936Z"), q(s, "fill", "#FF7C00"), q(s, "class", "svelte-43sxxs"), q(o, "d", "M0.250138 139.937L254.981 279.641V361.255L0.250138 221.55V139.937Z"), q(o, "fill", "#FF7C00"), q(o, "fill-opacity", "0.4"), q(o, "class", "svelte-43sxxs"), q(r, "d", "M255.923 0.232622L0.236328 139.936V221.55L255.923 81.8469V0.232622Z"), q(r, "fill", "#FF7C00"), q(r, "class", "svelte-43sxxs"), Qn(i, "transform", "translate(" + /*$top*/
+      e = G_("div"), n = ze("svg"), i = ze("g"), l = ze("path"), s = ze("path"), o = ze("path"), r = ze("path"), a = ze("g"), u = ze("path"), f = ze("path"), _ = ze("path"), h = ze("path"), z(l, "d", "M255.926 0.754768L509.702 139.936V221.027L255.926 81.8465V0.754768Z"), z(l, "fill", "#FF7C00"), z(l, "fill-opacity", "0.4"), z(l, "class", "svelte-43sxxs"), z(s, "d", "M509.69 139.936L254.981 279.641V361.255L509.69 221.55V139.936Z"), z(s, "fill", "#FF7C00"), z(s, "class", "svelte-43sxxs"), z(o, "d", "M0.250138 139.937L254.981 279.641V361.255L0.250138 221.55V139.937Z"), z(o, "fill", "#FF7C00"), z(o, "fill-opacity", "0.4"), z(o, "class", "svelte-43sxxs"), z(r, "d", "M255.923 0.232622L0.236328 139.936V221.55L255.923 81.8469V0.232622Z"), z(r, "fill", "#FF7C00"), z(r, "class", "svelte-43sxxs"), Qn(i, "transform", "translate(" + /*$top*/
       t[1][0] + "px, " + /*$top*/
-      t[1][1] + "px)"), q(u, "d", "M255.926 141.5L509.702 280.681V361.773L255.926 222.592V141.5Z"), q(u, "fill", "#FF7C00"), q(u, "fill-opacity", "0.4"), q(u, "class", "svelte-43sxxs"), q(f, "d", "M509.69 280.679L254.981 420.384V501.998L509.69 362.293V280.679Z"), q(f, "fill", "#FF7C00"), q(f, "class", "svelte-43sxxs"), q(_, "d", "M0.250138 280.681L254.981 420.386V502L0.250138 362.295V280.681Z"), q(_, "fill", "#FF7C00"), q(_, "fill-opacity", "0.4"), q(_, "class", "svelte-43sxxs"), q(h, "d", "M255.923 140.977L0.236328 280.68V362.294L255.923 222.591V140.977Z"), q(h, "fill", "#FF7C00"), q(h, "class", "svelte-43sxxs"), Qn(a, "transform", "translate(" + /*$bottom*/
+      t[1][1] + "px)"), z(u, "d", "M255.926 141.5L509.702 280.681V361.773L255.926 222.592V141.5Z"), z(u, "fill", "#FF7C00"), z(u, "fill-opacity", "0.4"), z(u, "class", "svelte-43sxxs"), z(f, "d", "M509.69 280.679L254.981 420.384V501.998L509.69 362.293V280.679Z"), z(f, "fill", "#FF7C00"), z(f, "class", "svelte-43sxxs"), z(_, "d", "M0.250138 280.681L254.981 420.386V502L0.250138 362.295V280.681Z"), z(_, "fill", "#FF7C00"), z(_, "fill-opacity", "0.4"), z(_, "class", "svelte-43sxxs"), z(h, "d", "M255.923 140.977L0.236328 280.68V362.294L255.923 222.591V140.977Z"), z(h, "fill", "#FF7C00"), z(h, "class", "svelte-43sxxs"), Qn(a, "transform", "translate(" + /*$bottom*/
       t[2][0] + "px, " + /*$bottom*/
-      t[2][1] + "px)"), q(n, "viewBox", "-1200 -1200 3000 3000"), q(n, "fill", "none"), q(n, "xmlns", "http://www.w3.org/2000/svg"), q(n, "class", "svelte-43sxxs"), q(e, "class", "svelte-43sxxs"), Ys(
+      t[2][1] + "px)"), z(n, "viewBox", "-1200 -1200 3000 3000"), z(n, "fill", "none"), z(n, "xmlns", "http://www.w3.org/2000/svg"), z(n, "class", "svelte-43sxxs"), z(e, "class", "svelte-43sxxs"), Ys(
         e,
         "margin",
         /*margin*/
@@ -2511,7 +2511,7 @@ function Z_(t) {
       );
     },
     m(c, d) {
-      V_(c, e, d), ze(e, n), ze(n, i), ze(i, l), ze(i, s), ze(i, o), ze(i, r), ze(n, a), ze(a, u), ze(a, f), ze(a, _), ze(a, h);
+      V_(c, e, d), qe(e, n), qe(n, i), qe(i, l), qe(i, s), qe(i, o), qe(i, r), qe(n, a), qe(a, u), qe(a, f), qe(a, _), qe(a, h);
     },
     p(c, [d]) {
       d & /*$top*/
@@ -2555,7 +2555,7 @@ function Y_(t, e, n) {
     "margin" in h && n(0, s = h.margin);
   }, [s, i, l, o, r];
 }
-class J_ extends q_ {
+class J_ extends z_ {
   constructor(e) {
     super(), x_(this, e, Y_, Z_, X_, { margin: 0 });
   }
@@ -3550,11 +3550,11 @@ async function Th(t) {
 const {
   SvelteComponent: Hh,
   assign: yi,
-  check_outros: zr,
+  check_outros: qr,
   compute_rest_props: co,
   create_slot: us,
   detach: Di,
-  element: qr,
+  element: zr,
   empty: jr,
   exclude_internal_props: Ph,
   get_all_dirty_from_scope: fs,
@@ -3603,7 +3603,7 @@ function Oh(t) {
     u = yi(u, a[f]);
   return {
     c() {
-      e = qr("a"), r && r.c(), Ei(e, u);
+      e = zr("a"), r && r.c(), Ei(e, u);
     },
     m(f, _) {
       Ri(f, e, _), r && r.m(e, null), i = !0, l || (s = Vr(
@@ -3681,7 +3681,7 @@ function Dh(t) {
       let f = e;
       e = r(a), e === f ? o[e].p(a, u) : (xr(), Nt(o[f], 1, 1, () => {
         o[f] = null;
-      }), zr(), n = o[e], n ? n.p(a, u) : (n = o[e] = s[e](a), n.c()), Pt(n, 1), n.m(i.parentNode, i));
+      }), qr(), n = o[e], n ? n.p(a, u) : (n = o[e] = s[e](a), n.c()), Pt(n, 1), n.m(i.parentNode, i));
     },
     i(a) {
       l || (Pt(n), l = !0);
@@ -3718,7 +3718,7 @@ function Rh(t) {
     a = yi(a, r[u]);
   return {
     c() {
-      e = qr("a"), o && o.c(), Ei(e, a);
+      e = zr("a"), o && o.c(), Ei(e, a);
     },
     m(u, f) {
       Ri(u, e, f), o && o.m(e, null), n = !0, i || (l = Vr(e, "click", Lh(
@@ -3840,7 +3840,7 @@ function Fh(t) {
       let _ = n;
       n = a(u, f), n === _ ? r[n].p(u, f) : (xr(), Nt(r[_], 1, 1, () => {
         r[_] = null;
-      }), zr(), i = r[n], i ? i.p(u, f) : (i = r[n] = o[n](u), i.c()), Pt(i, 1), i.m(l.parentNode, l));
+      }), qr(), i = r[n], i ? i.p(u, f) : (i = r[n] = o[n](u), i.c()), Pt(i, 1), i.m(l.parentNode, l));
     },
     i(u) {
       s || (Pt(i), s = !0);
@@ -3853,7 +3853,7 @@ function Fh(t) {
     }
   };
 }
-function zh(t, e, n) {
+function qh(t, e, n) {
   const i = ["href", "download"];
   let l = co(e, i), { $$slots: s = {}, $$scope: o } = e, { href: r = void 0 } = e, { download: a } = e;
   const u = Mh();
@@ -3900,9 +3900,9 @@ function zh(t, e, n) {
     s
   ];
 }
-class qh extends Hh {
+class zh extends Hh {
   constructor(e) {
-    super(), Nh(this, e, zh, Fh, Ih, { href: 0, download: 1 });
+    super(), Nh(this, e, qh, Fh, Ih, { href: 0, download: 1 });
   }
 }
 var hl = new Intl.Collator(0, { numeric: 1 }).compare;
@@ -4239,7 +4239,7 @@ function Jh(t, e) {
               fn_index: T,
               trigger_id: g
             }, e0(T, v))
-              z({
+              q({
                 type: "status",
                 endpoint: D,
                 stage: "pending",
@@ -4255,13 +4255,13 @@ function Jh(t, e) {
                 f
               ).then(([ne, Y]) => {
                 const de = ne.data;
-                Y == 200 ? (z({
+                Y == 200 ? (q({
                   type: "data",
                   endpoint: D,
                   fn_index: T,
                   data: de,
                   time: /* @__PURE__ */ new Date()
-                }), z({
+                }), q({
                   type: "status",
                   endpoint: D,
                   fn_index: T,
@@ -4269,7 +4269,7 @@ function Jh(t, e) {
                   eta: ne.average_duration,
                   queue: !1,
                   time: /* @__PURE__ */ new Date()
-                })) : z({
+                })) : q({
                   type: "status",
                   stage: "error",
                   endpoint: D,
@@ -4279,7 +4279,7 @@ function Jh(t, e) {
                   time: /* @__PURE__ */ new Date()
                 });
               }).catch((ne) => {
-                z({
+                q({
                   type: "status",
                   stage: "error",
                   message: ne.message,
@@ -4290,7 +4290,7 @@ function Jh(t, e) {
                 });
               });
             else if (He == "ws") {
-              z({
+              q({
                 type: "status",
                 stage: "pending",
                 queue: !0,
@@ -4305,7 +4305,7 @@ function Jh(t, e) {
               )}
 							/queue/join${he ? "?" + he : ""}`);
               B && ne.searchParams.set("__sign", B), Q = new WebSocket(ne), Q.onclose = (Y) => {
-                Y.wasClean || z({
+                Y.wasClean || q({
                   type: "status",
                   stage: "error",
                   broken: !0,
@@ -4321,7 +4321,7 @@ function Jh(t, e) {
                   p[T]
                 );
                 if (ue === "update" && V && !j)
-                  z({
+                  q({
                     type: "status",
                     endpoint: D,
                     fn_index: T,
@@ -4332,13 +4332,13 @@ function Jh(t, e) {
                   Q.send(JSON.stringify({ fn_index: T, session_hash: b }));
                   return;
                 } else
-                  ue === "data" ? Q.send(JSON.stringify({ ...H, session_hash: b })) : ue === "complete" ? j = V : ue === "log" ? z({
+                  ue === "data" ? Q.send(JSON.stringify({ ...H, session_hash: b })) : ue === "complete" ? j = V : ue === "log" ? q({
                     type: "log",
                     log: Z.log,
                     level: Z.level,
                     endpoint: D,
                     fn_index: T
-                  }) : ue === "generating" && z({
+                  }) : ue === "generating" && q({
                     type: "status",
                     time: /* @__PURE__ */ new Date(),
                     ...V,
@@ -4347,13 +4347,13 @@ function Jh(t, e) {
                     endpoint: D,
                     fn_index: T
                   });
-                Z && (z({
+                Z && (q({
                   type: "data",
                   time: /* @__PURE__ */ new Date(),
                   data: Z.data,
                   endpoint: D,
                   fn_index: T
-                }), j && (z({
+                }), j && (q({
                   type: "status",
                   time: /* @__PURE__ */ new Date(),
                   ...j,
@@ -4367,7 +4367,7 @@ function Jh(t, e) {
                 () => Q.send(JSON.stringify({ hash: b }))
               );
             } else if (He == "sse") {
-              z({
+              q({
                 type: "status",
                 stage: "pending",
                 queue: !0,
@@ -4388,7 +4388,7 @@ function Jh(t, e) {
                   p[T]
                 );
                 if (ue === "update" && V && !j)
-                  z({
+                  q({
                     type: "status",
                     endpoint: D,
                     fn_index: T,
@@ -4406,7 +4406,7 @@ function Jh(t, e) {
                     },
                     f
                   );
-                  xa !== 200 && (z({
+                  xa !== 200 && (q({
                     type: "status",
                     stage: "error",
                     message: gt,
@@ -4416,13 +4416,13 @@ function Jh(t, e) {
                     time: /* @__PURE__ */ new Date()
                   }), Se.close());
                 } else
-                  ue === "complete" ? j = V : ue === "log" ? z({
+                  ue === "complete" ? j = V : ue === "log" ? q({
                     type: "log",
                     log: Z.log,
                     level: Z.level,
                     endpoint: D,
                     fn_index: T
-                  }) : ue === "generating" && z({
+                  }) : ue === "generating" && q({
                     type: "status",
                     time: /* @__PURE__ */ new Date(),
                     ...V,
@@ -4431,13 +4431,13 @@ function Jh(t, e) {
                     endpoint: D,
                     fn_index: T
                   });
-                Z && (z({
+                Z && (q({
                   type: "data",
                   time: /* @__PURE__ */ new Date(),
                   data: Z.data,
                   endpoint: D,
                   fn_index: T
-                }), j && (z({
+                }), j && (q({
                   type: "status",
                   time: /* @__PURE__ */ new Date(),
                   ...j,
@@ -4448,7 +4448,7 @@ function Jh(t, e) {
                 }), Se.close()));
               };
             } else
-              (He == "sse_v1" || He == "sse_v2") && (z({
+              (He == "sse_v1" || He == "sse_v2") && (q({
                 type: "status",
                 stage: "pending",
                 queue: !0,
@@ -4464,7 +4464,7 @@ function Jh(t, e) {
                 f
               ).then(([ne, Y]) => {
                 if (Y === 503)
-                  z({
+                  q({
                     type: "status",
                     stage: "error",
                     message: Zr,
@@ -4474,7 +4474,7 @@ function Jh(t, e) {
                     time: /* @__PURE__ */ new Date()
                   });
                 else if (Y !== 200)
-                  z({
+                  q({
                     type: "status",
                     stage: "error",
                     message: gt,
@@ -4494,7 +4494,7 @@ function Jh(t, e) {
                       if (V == "heartbeat")
                         return;
                       if (V === "update" && Z && !j)
-                        z({
+                        q({
                           type: "status",
                           endpoint: D,
                           fn_index: T,
@@ -4504,7 +4504,7 @@ function Jh(t, e) {
                       else if (V === "complete")
                         j = Z;
                       else if (V == "unexpected_error")
-                        console.error("Unexpected error", Z == null ? void 0 : Z.message), z({
+                        console.error("Unexpected error", Z == null ? void 0 : Z.message), q({
                           type: "status",
                           stage: "error",
                           message: (Z == null ? void 0 : Z.message) || "An Unexpected Error Occurred!",
@@ -4514,7 +4514,7 @@ function Jh(t, e) {
                           time: /* @__PURE__ */ new Date()
                         });
                       else if (V === "log") {
-                        z({
+                        q({
                           type: "log",
                           log: mt.log,
                           level: mt.level,
@@ -4523,7 +4523,7 @@ function Jh(t, e) {
                         });
                         return;
                       } else
-                        V === "generating" && (z({
+                        V === "generating" && (q({
                           type: "status",
                           time: /* @__PURE__ */ new Date(),
                           ...Z,
@@ -4532,13 +4532,13 @@ function Jh(t, e) {
                           endpoint: D,
                           fn_index: T
                         }), mt && He === "sse_v2" && Me(R, mt));
-                      mt && (z({
+                      mt && (q({
                         type: "data",
                         time: /* @__PURE__ */ new Date(),
                         data: mt.data,
                         endpoint: D,
                         fn_index: T
-                      }), j && z({
+                      }), j && q({
                         type: "status",
                         time: /* @__PURE__ */ new Date(),
                         ...j,
@@ -4548,7 +4548,7 @@ function Jh(t, e) {
                         fn_index: T
                       })), ((Z == null ? void 0 : Z.stage) === "complete" || (Z == null ? void 0 : Z.stage) === "error") && (E[R] && delete E[R], R in C && delete C[R]);
                     } catch (V) {
-                      console.error("Unexpected client exception", V), z({
+                      console.error("Unexpected client exception", V), q({
                         type: "status",
                         stage: "error",
                         message: "An Unexpected Error Occurred!",
@@ -4577,7 +4577,7 @@ function Jh(t, e) {
             C[K][de] = ue, ge.data[de] = ue;
           });
         }
-        function z(K) {
+        function q(K) {
           const ne = X[K.type] || [];
           ne == null || ne.forEach((Y) => Y(K));
         }
@@ -4596,7 +4596,7 @@ function Jh(t, e) {
             queue: !1,
             time: /* @__PURE__ */ new Date()
           };
-          j = K, z({
+          j = K, q({
             ...K,
             type: "status",
             endpoint: D,
@@ -6931,7 +6931,7 @@ var So = N0 ? (
       return l < 55296 || l > 56319 || n + 1 === i || (s = e.charCodeAt(n + 1)) < 56320 || s > 57343 ? l : (l - 55296 << 10) + (s - 56320) + 65536;
     }
   }
-), z0 = O0 ? (
+), q0 = O0 ? (
   // Native
   function(e) {
     return e.trimStart();
@@ -6941,7 +6941,7 @@ var So = N0 ? (
   function(e) {
     return e.replace(H0, "");
   }
-), q0 = D0 ? (
+), z0 = D0 ? (
   // Native
   function(e) {
     return e.trimEnd();
@@ -7172,7 +7172,7 @@ var j0 = (
             var f = this.clonePosition(), _ = this.parseSimpleArgStyleIfPossible();
             if (_.err)
               return _;
-            var h = q0(_.val);
+            var h = z0(_.val);
             if (h.length === 0)
               return this.error(U.EXPECT_ARGUMENT_STYLE, F(this.clonePosition(), this.clonePosition()));
             var c = F(f, this.clonePosition());
@@ -7183,7 +7183,7 @@ var j0 = (
             return d;
           var m = F(l, this.clonePosition());
           if (u && So(u == null ? void 0 : u.style, "::", 0)) {
-            var b = z0(u.style.slice(2));
+            var b = q0(u.style.slice(2));
             if (r === "number") {
               var _ = this.parseNumberSkeletonFromString(b, u.styleLocation);
               return _.err ? _ : {
@@ -7854,7 +7854,7 @@ const ut = {}, ad = (t, e, n) => n && (e in ut || (ut[e] = {}), t in ut[e] || (u
     return;
   if (e in ut && t in ut[e])
     return ut[e][t];
-  const n = zi(e);
+  const n = qi(e);
   for (let i = 0; i < n.length; i++) {
     const l = n[i], s = fd(l, t);
     if (s)
@@ -7862,7 +7862,7 @@ const ut = {}, ad = (t, e, n) => n && (e in ut || (ut[e] = {}), t in ut[e] || (u
   }
 };
 let gs;
-const zn = Fn({});
+const qn = Fn({});
 function ud(t) {
   return gs[t] || null;
 }
@@ -7878,7 +7878,7 @@ function fd(t, e) {
 function cd(t) {
   if (t == null)
     return;
-  const e = zi(t);
+  const e = qi(t);
   for (let n = 0; n < e.length; n++) {
     const i = e[n];
     if (da(i))
@@ -7886,13 +7886,13 @@ function cd(t) {
   }
 }
 function _d(t, ...e) {
-  delete ut[t], zn.update((n) => (n[t] = g0.all([n[t] || {}, ...e]), n));
+  delete ut[t], qn.update((n) => (n[t] = g0.all([n[t] || {}, ...e]), n));
 }
 _n(
-  [zn],
+  [qn],
   ([t]) => Object.keys(t)
 );
-zn.subscribe((t) => gs = t);
+qn.subscribe((t) => gs = t);
 const gi = {};
 function hd(t, e) {
   gi[t].delete(e), gi[t].size === 0 && delete gi[t];
@@ -7901,13 +7901,13 @@ function ma(t) {
   return gi[t];
 }
 function dd(t) {
-  return zi(t).map((e) => {
+  return qi(t).map((e) => {
     const n = ma(e);
     return [e, n ? [...n] : []];
   }).filter(([, e]) => e.length > 0);
 }
 function Kl(t) {
-  return t == null ? !1 : zi(t).some(
+  return t == null ? !1 : qi(t).some(
     (e) => {
       var n;
       return (n = ma(e)) == null ? void 0 : n.size;
@@ -7988,7 +7988,7 @@ const ki = Fn(null);
 function Po(t) {
   return t.split("-").map((e, n, i) => i.slice(0, n + 1).join("-")).reverse();
 }
-function zi(t, e = un().fallbackLocale) {
+function qi(t, e = un().fallbackLocale) {
   const n = Po(t);
   return e ? [.../* @__PURE__ */ new Set([...n, ...Po(e)])] : n;
 }
@@ -8012,9 +8012,9 @@ const Ad = (t) => {
     });
   }
   return ki.set(t);
-}, qn = Cd(Sd({}, ki), {
+}, zn = Cd(Sd({}, ki), {
   set: Ad
-}), qi = (t) => {
+}), zi = (t) => {
   const e = /* @__PURE__ */ Object.create(null);
   return (i) => {
     const l = JSON.stringify(i);
@@ -8042,21 +8042,21 @@ const On = (t, e) => {
   if (t in n && e in n[t])
     return n[t][e];
   throw new Error(`[svelte-i18n] Unknown "${e}" ${t} format.`);
-}, Td = qi(
+}, Td = zi(
   (t) => {
     var e = t, { locale: n, format: i } = e, l = dn(e, ["locale", "format"]);
     if (n == null)
       throw new Error('[svelte-i18n] A "locale" must be set to format numbers');
     return i && (l = On("number", i)), new Intl.NumberFormat(n, l);
   }
-), Hd = qi(
+), Hd = zi(
   (t) => {
     var e = t, { locale: n, format: i } = e, l = dn(e, ["locale", "format"]);
     if (n == null)
       throw new Error('[svelte-i18n] A "locale" must be set to format dates');
     return i ? l = On("date", i) : Object.keys(l).length === 0 && (l = On("date", "short")), new Intl.DateTimeFormat(n, l);
   }
-), Pd = qi(
+), Pd = zi(
   (t) => {
     var e = t, { locale: n, format: i } = e, l = dn(e, ["locale", "format"]);
     if (n == null)
@@ -8086,7 +8086,7 @@ const On = (t, e) => {
     "locale"
   ]);
   return Pd(bs({ locale: n }, i));
-}, Md = qi(
+}, Md = zi(
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   (t, e = Dt()) => new od(t, e, un().formats, {
     ignoreTag: un().ignoreTag
@@ -8124,18 +8124,18 @@ const On = (t, e) => {
   }
   return _;
 }, Dd = (t, e) => Id(e).format(t), Rd = (t, e) => Ld(e).format(t), Ud = (t, e) => Nd(e).format(t), Fd = (t, e = Dt()) => ha(t, e);
-_n([qn, zn], () => Od);
-_n([qn], () => Dd);
-_n([qn], () => Rd);
-_n([qn], () => Ud);
-_n([qn, zn], () => Fd);
+_n([zn, qn], () => Od);
+_n([zn], () => Dd);
+_n([zn], () => Rd);
+_n([zn], () => Ud);
+_n([zn, qn], () => Fd);
 const {
-  SvelteComponent: zd,
+  SvelteComponent: qd,
   append: Te,
   attr: Et,
   detach: wa,
   element: kt,
-  init: qd,
+  init: zd,
   insert: va,
   noop: Lo,
   safe_not_equal: jd,
@@ -8262,9 +8262,9 @@ function Zd(t, e, n) {
     a
   ];
 }
-class Yd extends zd {
+class Yd extends qd {
   constructor(e) {
-    super(), qd(this, e, Zd, Xd, jd, { upload_id: 3, root: 4, files: 5 });
+    super(), zd(this, e, Zd, Xd, jd, { upload_id: 3, root: 4, files: 5 });
   }
 }
 const {
@@ -8911,11 +8911,11 @@ const {
   SvelteComponent: Em,
   append: Fo,
   attr: Cl,
-  bubble: zo,
+  bubble: qo,
   create_component: km,
   destroy_component: Sm,
   detach: Ha,
-  element: qo,
+  element: zo,
   init: Cm,
   insert: Pa,
   listen: Al,
@@ -8971,7 +8971,7 @@ function Rm(t) {
     }
   }), {
     c() {
-      e = qo("label"), km(n.$$.fragment), i = Pm(), l = qo("input"), Cl(l, "type", "color"), l.disabled = /*disabled*/
+      e = zo("label"), km(n.$$.fragment), i = Pm(), l = zo("input"), Cl(l, "type", "color"), l.disabled = /*disabled*/
       t[3], Cl(l, "class", "svelte-16l8u73"), Cl(e, "class", "block");
     },
     m(a, u) {
@@ -9037,10 +9037,10 @@ function Um(t, e, n) {
     n(5, l = !1);
   });
   function _(d) {
-    zo.call(this, t, d);
+    qo.call(this, t, d);
   }
   function h(d) {
-    zo.call(this, t, d);
+    qo.call(this, t, d);
   }
   function c() {
     i = this.value, n(0, i);
@@ -9076,10 +9076,10 @@ class Fm extends Em {
 }
 new Intl.Collator(0, { numeric: 1 }).compare;
 const {
-  SvelteComponent: zm,
+  SvelteComponent: qm,
   append: Na,
   attr: ie,
-  bubble: qm,
+  bubble: zm,
   check_outros: jm,
   create_slot: La,
   detach: jn,
@@ -9441,7 +9441,7 @@ function Jm(t) {
 function Qm(t, e, n) {
   let { $$slots: i = {}, $$scope: l } = e, { elem_id: s = "" } = e, { elem_classes: o = [] } = e, { visible: r = !0 } = e, { variant: a = "secondary" } = e, { size: u = "lg" } = e, { value: f = null } = e, { link: _ = null } = e, { icon: h = null } = e, { disabled: c = !1 } = e, { scale: d = null } = e, { min_width: m = void 0 } = e;
   function b(p) {
-    qm.call(this, t, p);
+    zm.call(this, t, p);
   }
   return t.$$set = (p) => {
     "elem_id" in p && n(0, s = p.elem_id), "elem_classes" in p && n(1, o = p.elem_classes), "visible" in p && n(2, r = p.visible), "variant" in p && n(3, a = p.variant), "size" in p && n(4, u = p.size), "value" in p && n(5, f = p.value), "link" in p && n(6, _ = p.link), "icon" in p && n(7, h = p.icon), "disabled" in p && n(8, c = p.disabled), "scale" in p && n(9, d = p.scale), "min_width" in p && n(10, m = p.min_width), "$$scope" in p && n(11, l = p.$$scope);
@@ -9462,7 +9462,7 @@ function Qm(t, e, n) {
     b
   ];
 }
-class Vo extends zm {
+class Vo extends qm {
   constructor(e) {
     super(), Vm(this, e, Qm, Jm, Wm, {
       elem_id: 0,
@@ -10316,7 +10316,7 @@ function F1(t) {
     }
   };
 }
-function z1(t) {
+function q1(t) {
   let e, n, i, l, s, o, r, a, u, f, _, h, c, d, m;
   return s = new N1({
     props: {
@@ -10374,7 +10374,7 @@ function z1(t) {
     t[9]
   ), {
     c() {
-      e = yt("div"), n = yt("div"), i = yt("span"), l = yt("div"), ii(s.$$.fragment), o = Hl(), r = yt("div"), ii(a.$$.fragment), u = Hl(), f = yt("div"), ii(_.$$.fragment), h = Hl(), c = yt("div"), ii(d.$$.fragment), oi(l, "margin-right", "10px"), oi(r, "margin-right", "40px"), oi(r, "margin-bottom", "8px"), oi(f, "margin-right", "8px"), ni(i, "class", "model-content svelte-nh1w43"), ni(n, "class", "modal-container svelte-nh1w43"), ni(e, "class", "modal svelte-nh1w43"), ni(e, "id", "model-box-edit");
+      e = yt("div"), n = yt("div"), i = yt("span"), l = yt("div"), ii(s.$$.fragment), o = Hl(), r = yt("div"), ii(a.$$.fragment), u = Hl(), f = yt("div"), ii(_.$$.fragment), h = Hl(), c = yt("div"), ii(d.$$.fragment), oi(l, "margin-right", "10px"), oi(r, "margin-right", "40px"), oi(r, "margin-bottom", "8px"), oi(f, "margin-right", "8px"), ni(i, "class", "model-content svelte-hkn2q1"), ni(n, "class", "modal-container svelte-hkn2q1"), ni(e, "class", "modal svelte-hkn2q1"), ni(e, "id", "model-box-edit");
     },
     m(b, p) {
       ys(b, e, p), Je(e, n), Je(n, i), Je(i, l), si(s, l, null), Je(i, o), Je(i, r), si(a, r, null), Je(i, u), Je(i, f), si(_, f, null), Je(i, h), Je(i, c), si(d, c, null), m = !0;
@@ -10408,7 +10408,7 @@ function z1(t) {
     }
   };
 }
-function q1(t, e, n) {
+function z1(t, e, n) {
   let { label: i = "" } = e, { choices: l = [] } = e, { choicesColors: s = [] } = e, { color: o = "" } = e;
   const r = O1();
   function a(m) {
@@ -10456,7 +10456,7 @@ function q1(t, e, n) {
 }
 class Fa extends L1 {
   constructor(e) {
-    super(), I1(this, e, q1, z1, M1, {
+    super(), I1(this, e, z1, q1, M1, {
       label: 0,
       choices: 2,
       choicesColors: 7,
@@ -10635,7 +10635,7 @@ const {
   listen: rt,
   mount_component: Nn,
   noop: X1,
-  run_all: za,
+  run_all: qa,
   safe_not_equal: W1,
   space: Ln,
   transition_in: Ce,
@@ -10677,7 +10677,7 @@ function ir(t) {
       je(i.$$.fragment, c), je(o.$$.fragment, c), je(u.$$.fragment, c), f = !1;
     },
     d(c) {
-      c && Zt(e), Pn(i), Pn(o), Pn(u), _ = !1, za(h);
+      c && Zt(e), Pn(i), Pn(o), Pn(u), _ = !1, qa(h);
     }
   };
 }
@@ -10912,7 +10912,7 @@ function Q1(t) {
       je(f), je(_), je(h), r = !1;
     },
     d(c) {
-      c && (Zt(e), Zt(i), Zt(l), Zt(s), Zt(o)), t[21](null), f && f.d(c), _ && _.d(c), h && h.d(c), a = !1, za(u);
+      c && (Zt(e), Zt(i), Zt(l), Zt(s), Zt(o)), t[21](null), f && f.d(c), _ && _.d(c), h && h.d(c), a = !1, qa(u);
     }
   };
 }
@@ -10944,9 +10944,9 @@ function K1(t, e, n) {
       return;
     const R = f.getBoundingClientRect(), j = H.clientX - R.left, X = H.clientY - R.top;
     for (const [he, Me] of r.boxes.entries()) {
-      const z = Me.indexOfPointInsideHandle(j, X);
-      if (z >= 0) {
-        A(he), Me.startResize(z, H);
+      const q = Me.indexOfPointInsideHandle(j, X);
+      if (q >= 0) {
+        A(he), Me.startResize(q, H);
         return;
       }
     }
@@ -11011,8 +11011,9 @@ function K1(t, e, n) {
         }
       else
         d = 0, m = 0, b = f.width, p = f.height, n(4, f.height = f.clientHeight, f);
-      for (const R of r.boxes)
-        R.canvasXmin = d, R.canvasYmin = m, R.canvasXmax = b, R.canvasYmax = p, R.setScaleFactor(y);
+      if (b > 0 && p > 0)
+        for (const R of r.boxes)
+          R.canvasXmin = d, R.canvasYmin = m, R.canvasXmax = b, R.canvasYmax = p, R.setScaleFactor(y);
       v(), N("change");
     }
   }
@@ -11238,7 +11239,7 @@ function hg(t, e, n) {
     d
   ];
 }
-class qa extends eg {
+class za extends eg {
   constructor(e) {
     super(), og(this, e, hg, _g, ag, {
       src: 8,
@@ -11282,7 +11283,7 @@ const {
 } = window.__gradio__svelte__internal, { createEventDispatcher: kg } = window.__gradio__svelte__internal;
 function ar(t) {
   let e, n;
-  return e = new qh({
+  return e = new zh({
     props: {
       href: (
         /*value*/
@@ -11550,7 +11551,7 @@ function _r(t) {
   return (
     /*value*/
     t[1] !== void 0 && (o.value = /*value*/
-    t[1]), n = new qa({ props: o }), Rn.push(() => Ni(n, "value", s)), n.$on(
+    t[1]), n = new za({ props: o }), Rn.push(() => Ni(n, "value", s)), n.$on(
       "change",
       /*change_handler*/
       t[33]
@@ -11934,14 +11935,14 @@ const {
   init: Rg,
   insert: Ug,
   mount_component: Fg,
-  safe_not_equal: zg,
+  safe_not_equal: qg,
   toggle_class: ot,
   transition_in: bi,
   transition_out: rs
 } = window.__gradio__svelte__internal;
 function dr(t) {
   let e, n;
-  return e = new qa({
+  return e = new za({
     props: {
       src: (
         /*samples_dir*/
@@ -11975,7 +11976,7 @@ function dr(t) {
     }
   };
 }
-function qg(t) {
+function zg(t) {
   let e, n, i = (
     /*value*/
     t[0] && dr(t)
@@ -12057,7 +12058,7 @@ function jg(t, e, n) {
 }
 class hb extends Hg {
   constructor(e) {
-    super(), Rg(this, e, jg, qg, zg, {
+    super(), Rg(this, e, jg, zg, qg, {
       value: 0,
       samples_dir: 1,
       type: 2,

@@ -2,7 +2,7 @@
 # `gradio_image_annotation`
 <a href="https://pypi.org/project/gradio_image_annotation/" target="_blank"><img alt="PyPI - Version" src="https://img.shields.io/pypi/v/gradio_image_annotation"></a>  
 
-A component that can be used to annotate images with bounding boxes.
+A Gradio component that can be used to annotate images with bounding boxes.
 
 ## Installation
 
