@@ -427,5 +427,5 @@ The code snippet below is accurate in cases where the component is used as both 
  ```
  
 ## Screenshots
-![](images/demo_1.png)
-![](images/demo_2.png)
+![](https://raw.githubusercontent.com/edgarGracia/gradio_image_annotator/main/images/demo_1.png)
+![](https://raw.githubusercontent.com/edgarGracia/gradio_image_annotator/main/images/demo_2.png)
