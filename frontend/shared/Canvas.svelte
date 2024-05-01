@@ -135,6 +135,10 @@
 			} else {
 				color = colorHexToRGB(color);
 			}
+			let xmin = canvasXmin + ((canvasXmax - canvasXmin) / 3);
+			let xmax = canvasXmax - ((canvasXmax - canvasXmin) / 3);
+			let ymin = canvasYmin + ((canvasYmax - canvasYmin) / 3);
+			let ymax = canvasYmax - ((canvasYmax - canvasYmin) / 3);
 			let box = new Box(
 				draw,
 				canvasXmin,
@@ -142,10 +146,10 @@
 				canvasXmax,
 				canvasYmax,
 				label,
-				Math.round(canvas.width / 3),
-				Math.round(canvas.height / 3),
-				Math.round((2*canvas.width) / 3),
-				Math.round((2*canvas.height) / 3),
+				Math.round(xmin),
+				Math.round(ymin),
+				Math.round(xmax),
+				Math.round(ymax),
 				color,
 				boxAlpha,
 				boxMinSize,
@@ -282,7 +286,23 @@
 
 	$: {
 		value;
+		setImage();
 		parseInputBoxes();
+		resize();
+		draw();
+	}
+
+	function setImage(){
+		if (imageUrl !== null) {
+			if (image === null || image.src != imageUrl) {
+				image = new Image();
+				image.src = imageUrl;
+				image.onload = function(){
+					resize();
+					draw();
+				}
+			}
+		}
 	}
 
 	onMount(() => {
@@ -298,14 +318,7 @@
 		ctx = canvas.getContext("2d");
 		observer.observe(canvas);
 
-		if (imageUrl !== null){
-			image = new Image();
-			image.src = imageUrl;
-			image.onload = function(){
-				resize();
-				draw();
-			}
-		}
+		setImage();
 		resize();
 		draw();
 	});
