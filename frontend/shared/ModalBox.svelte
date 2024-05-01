@@ -6,9 +6,11 @@
     import { onMount, onDestroy } from "svelte";
 
     export let label = "";
+    export let currentLabel = "";
     export let choices = [];  // [(label, i)]
     export let choicesColors = [];
     export let color = "";
+    export let currentColor = "";
     
     const dispatch = createEventDispatcher<{
 		change: object;
@@ -16,8 +18,8 @@
 
     function dispatchChange(ok: boolean) {
         dispatch("change", {
-            label: label,
-            color: color,
+            label: currentLabel,
+            color: currentColor,
             ok: ok
         });
     }
@@ -28,19 +30,19 @@
 
         if (Number.isInteger(choice)) {
             if (Array.isArray(choicesColors) && choice < choicesColors.length) {
-                color = choicesColors[choice];
+                currentColor = choicesColors[choice];
             }
             if (Array.isArray(choices) && choice < choices.length) {
-                label = choices[choice][0];
+                currentLabel = choices[choice][0];
             }
         } else {
-            label = choice;
+            currentLabel = choice;
         }
     }
 
     function onColorChange(event) {
         const { detail } = event;
-		color = detail;
+		currentColor = detail;
     }
 
     function onDropDownEnter(event) {
@@ -58,6 +60,8 @@
 
 	onMount(() => {
 		document.addEventListener("keydown", handleKeyPress);
+        currentLabel = label;
+        currentColor = color;
 	});
     
 	onDestroy(() => {
@@ -71,7 +75,7 @@
         <span class="model-content">
             <div style="margin-right: 10px;">
                 <BaseDropdown
-                    value={label}
+                    value={currentLabel}
                     label="Label"
                     {choices}
                     show_label={false}
@@ -82,7 +86,7 @@
             </div>
             <div style="margin-right: 40px; margin-bottom: 8px;">
                 <BaseColorPicker
-                    value={color}
+                    value={currentColor}
                     label="Color"
                     show_label={false}
                     on:change={onColorChange}
