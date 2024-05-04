@@ -861,7 +861,7 @@ let qt = class extends At {
       return;
     }
     const e = this.consume(8), t = e.readUInt32BE(0);
-    return t > Math.pow(2, 53 - 32) - 1 ? (this._loop = !1, g(
+    return t > Math.pow(2, 21) - 1 ? (this._loop = !1, g(
       RangeError,
       "Unsupported WebSocket frame: payload length > 2^53 - 1",
       !1,
@@ -1705,8 +1705,7 @@ let m = class d extends is {
   close(e, t) {
     if (this.readyState !== d.CLOSED) {
       if (this.readyState === d.CONNECTING) {
-        const r = "WebSocket was closed before the connection was established";
-        b(this, this._req, r);
+        b(this, this._req, "WebSocket was closed before the connection was established");
         return;
       }
       if (this.readyState === d.CLOSING) {
@@ -1810,8 +1809,7 @@ let m = class d extends is {
   terminate() {
     if (this.readyState !== d.CLOSED) {
       if (this.readyState === d.CONNECTING) {
-        const e = "WebSocket was closed before the connection was established";
-        b(this, this._req, e);
+        b(this, this._req, "WebSocket was closed before the connection was established");
         return;
       }
       this._socket && (this._readyState = d.CLOSING, this._socket.destroy());

@@ -67,8 +67,10 @@ export default class Box {
         this.scaleFactor = scaleFactor;
         this.label = label;
         this.isDragging = false;
-        [this.xmin, this.ymin] = this.toBoxCoordinates(xmin, ymin);
-        [this.xmax, this.ymax] = this.toBoxCoordinates(xmax, ymax);
+        this.xmin = xmin;
+        this.ymin = ymin;
+        this.xmax = xmax;
+        this.ymax = ymax;
         this.isResizing = false;
         this.isSelected = false;
         this.offsetMouseX = 0;

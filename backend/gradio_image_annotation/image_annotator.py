@@ -205,19 +205,22 @@ class image_annotator(Component):
         )
 
     def preprocess_boxes(self, boxes: List[dict] | None) -> list:
-        if not boxes:
-            return []
+        parsed_boxes = []
         for box in boxes:
+            new_box = {}
+            new_box["label"] = box.get("label", "")
+            new_box["color"] = (0,0,0)
             if "color" in box:
                 match = re.match(r'rgb\((\d+), (\d+), (\d+)\)', box["color"])
                 if match:
-                    box["color"] = tuple(int(match.group(i)) for i in range(1, 4))
-            scale_factor = box["scaleFactor"] if "scaleFactor" in box else 1
-            box["xmin"] = round(box["xmin"] / scale_factor)
-            box["ymin"] = round(box["ymin"] / scale_factor)
-            box["xmax"] = round(box["xmax"] / scale_factor)
-            box["ymax"] = round(box["ymax"] / scale_factor)
-        return boxes
+                    new_box["color"] = tuple(int(match.group(i)) for i in range(1, 4))
+            scale_factor = box.get("scaleFactor", 1)
+            new_box["xmin"] = round(box["xmin"] / scale_factor)
+            new_box["ymin"] = round(box["ymin"] / scale_factor)
+            new_box["xmax"] = round(box["xmax"] / scale_factor)
+            new_box["ymax"] = round(box["ymax"] / scale_factor)
+            parsed_boxes.append(new_box)
+        return parsed_boxes
 
     def preprocess(self, payload: AnnotatedImageData | None) -> dict | None:
         """

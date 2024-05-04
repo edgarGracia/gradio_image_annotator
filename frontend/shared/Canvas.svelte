@@ -135,10 +135,10 @@
 			} else {
 				color = colorHexToRGB(color);
 			}
-			let xmin = canvasXmin + ((canvasXmax - canvasXmin) / 3);
-			let xmax = canvasXmax - ((canvasXmax - canvasXmin) / 3);
-			let ymin = canvasYmin + ((canvasYmax - canvasYmin) / 3);
-			let ymax = canvasYmax - ((canvasYmax - canvasYmin) / 3);
+			let xmin = (imageWidth / 3) / scaleFactor;
+			let xmax = ((imageWidth / 3)*2) / scaleFactor;
+			let ymin = (imageHeight / 3) / scaleFactor;
+			let ymax = ((imageHeight / 3)*2) / scaleFactor;
 			let box = new Box(
 				draw,
 				canvasXmin,
@@ -153,7 +153,6 @@
 				color,
 				boxAlpha,
 				boxMinSize,
-				scaleFactor
 			);
 			value.boxes = [box, ...value.boxes];
 			draw();
@@ -245,7 +244,6 @@
 	const observer = new ResizeObserver(resize);
 
 	function parseInputBoxes() {
-		let newBoxes = [];
 		for (let i = 0; i < value.boxes.length; i++) {
 			let box = value.boxes[i];
 			if (!(box instanceof Box)) {
@@ -257,7 +255,7 @@
             			color = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
         			}
 				} else {
-					color = Colors[newBoxes.length % Colors.length];
+					color = Colors[i % Colors.length];
 				}
 				if (box.hasOwnProperty("label")) {
 					label = box["label"];
@@ -276,12 +274,10 @@
 					color,
 					boxAlpha,
 					boxMinSize,
-					scaleFactor
 				);
+				value.boxes[i] = box;
 			}
-			newBoxes.push(box);
 		}
-		value.boxes = newBoxes;
 	}
 
 	$: {

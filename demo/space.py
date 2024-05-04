@@ -67,20 +67,9 @@ def crop(annotations):
 
 
 def get_boxes_json(annotations):
-    return [
-        {k: box[k]
-            for k in box if k in ("xmin", "ymin", "xmax", "ymax", "label")}
-        for box in annotations["boxes"]
-    ]
-
+    return annotations["boxes"]
 
 with gr.Blocks() as demo:
-    with gr.Tab("Crop"):
-        with gr.Row():
-            annotator_crop = image_annotator(example, image_type="numpy")
-            image_crop = gr.Image()
-        button_crop = gr.Button("Crop")
-        button_crop.click(crop, annotator_crop, image_crop)
     with gr.Tab("Object annotation"):
         annotator = image_annotator(
             {"image": "https://gradio-builds.s3.amazonaws.com/demo-files/base.png"},
@@ -90,6 +79,12 @@ with gr.Blocks() as demo:
         button_get = gr.Button("Get bounding boxes")
         json_boxes = gr.JSON()
         button_get.click(get_boxes_json, annotator, json_boxes)
+    with gr.Tab("Crop"):
+        with gr.Row():
+            annotator_crop = image_annotator(example, image_type="numpy")
+            image_crop = gr.Image()
+        button_crop = gr.Button("Crop")
+        button_crop.click(crop, annotator_crop, image_crop)
 
 
 if __name__ == "__main__":

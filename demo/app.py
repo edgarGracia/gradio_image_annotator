@@ -27,12 +27,7 @@ def crop(annotations):
 
 
 def get_boxes_json(annotations):
-    return [
-        {k: box[k]
-            for k in box if k in ("xmin", "ymin", "xmax", "ymax", "label")}
-        for box in annotations["boxes"]
-    ]
-
+    return annotations["boxes"]
 
 with gr.Blocks() as demo:
     with gr.Tab("Object annotation"):
