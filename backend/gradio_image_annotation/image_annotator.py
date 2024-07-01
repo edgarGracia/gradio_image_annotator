@@ -50,6 +50,9 @@ class image_annotator(Component):
         label_list: list[str] | None = None,
         label_colors: list[str] | None = None,
         box_min_size: int | None = None,
+        handle_size: int | None = None,
+        box_thickness: int | None = None,
+        box_selected_thickness: int | None = None,
         height: int | str | None = None,
         width: int | str | None = None,
         image_mode: Literal[
@@ -78,6 +81,9 @@ class image_annotator(Component):
             label_list: List of valid labels.
             label_colors: Optional list of colors for each label when `label_list` is used. Colors must be a tuple of RGB values (e.g. `(255,255,255)`).
             box_min_size: Minimum valid bounding box size.
+            handle_size: Size of the bounding box resize handles.
+            box_thickness: Thickness of the bounding box outline.
+            box_selected_thickness: Thickness of the bounding box outline when it is selected.
             height: The height of the displayed image, specified in pixels if a number is passed, or in CSS units if a string is passed.
             width: The width of the displayed image, specified in pixels if a number is passed, or in CSS units if a string is passed.
             image_mode: "RGB" if color, or "L" if black and white. See https://pillow.readthedocs.io/en/stable/handbook/concepts.html for other supported image modes and their meaning.
@@ -131,6 +137,9 @@ class image_annotator(Component):
 
         self.boxes_alpha = boxes_alpha
         self.box_min_size = box_min_size
+        self.handle_size = handle_size
+        self.box_thickness = box_thickness
+        self.box_selected_thickness = box_selected_thickness
         if label_list:
             self.label_list = [(l, i) for i, l in enumerate(label_list)]
         else:

@@ -15,6 +15,9 @@
 	export let labelList: string[];
 	export let labelColors: string[];
 	export let boxMinSize: number;
+	export let handleSize: number;
+	export let boxThickness: number;
+	export let boxSelectedThickness: number;
 	export let value: null | AnnotatedImageData;
 
 	let resolved_src: typeof src;
@@ -54,5 +57,8 @@
 	choices={labelList}
 	choicesColors={labelColors}
 	{boxMinSize}
+	handleSize={handleSize}
+	boxThickness={boxThickness}
+	boxSelectedThickness={boxSelectedThickness}
 	imageUrl={resolved_src}
 />

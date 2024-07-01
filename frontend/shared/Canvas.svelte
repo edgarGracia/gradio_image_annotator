@@ -11,6 +11,9 @@
 	export let interactive: boolean;
 	export let boxAlpha = 0.5;
 	export let boxMinSize = 25;
+	export let handleSize: number;
+	export let boxThickness: number;
+	export let boxSelectedThickness: number;
 	export let value: null | AnnotatedImageData;
 	export let choices = [];
     export let choicesColors = [];
@@ -153,6 +156,9 @@
 				color,
 				boxAlpha,
 				boxMinSize,
+				handleSize,
+				boxThickness,
+				boxSelectedThickness
 			);
 			value.boxes = [box, ...value.boxes];
 			draw();
@@ -274,6 +280,9 @@
 					color,
 					boxAlpha,
 					boxMinSize,
+					handleSize,
+					boxThickness,
+					boxSelectedThickness
 				);
 				value.boxes[i] = box;
 			}

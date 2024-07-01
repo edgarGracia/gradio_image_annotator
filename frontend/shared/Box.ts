@@ -36,6 +36,8 @@ export default class Box {
     canvasXmax: number;
     canvasYmax: number;
     scaleFactor: number;
+    thickness: number;
+    selectedThickness: number;
     resizeHandles: {
         xmin: number;
         ymin: number;
@@ -57,6 +59,9 @@ export default class Box {
         color: string = "rgb(255, 255, 255)",
         alpha: number = 0.5,
         minSize: number = 25,
+        handleSize: number = 8,
+        thickness: number = 2,
+        selectedThickness: number = 4,
         scaleFactor: number = 1
     ) {
         this.renderCallBack = renderCallBack;
@@ -75,7 +80,9 @@ export default class Box {
         this.isSelected = false;
         this.offsetMouseX = 0;
         this.offsetMouseY = 0;
-        this.resizeHandleSize = 8;
+        this.resizeHandleSize = handleSize;
+        this.thickness = thickness;
+        this.selectedThickness = selectedThickness;
         this.updateHandles();
         this.resizingHandleIndex = -1;
         this.minSize = minSize;
@@ -111,30 +118,64 @@ export default class Box {
 
     updateHandles(): void {
         const halfSize = this.resizeHandleSize / 2;
+        const width = this.getWidth();
+        const height = this.getHeight();
         this.resizeHandles = [
             {
+                // Top left
                 xmin: this.xmin - halfSize,
                 ymin: this.ymin - halfSize,
                 xmax: this.xmin + halfSize,
                 ymax: this.ymin + halfSize,
             },
             {
+                // Top right
                 xmin: this.xmax - halfSize,
                 ymin: this.ymin - halfSize,
                 xmax: this.xmax + halfSize,
                 ymax: this.ymin + halfSize,
             },
             {
+                // Bottom right
                 xmin: this.xmax - halfSize,
                 ymin: this.ymax - halfSize,
                 xmax: this.xmax + halfSize,
                 ymax: this.ymax + halfSize,
             },
             {
+                // Bottom left
                 xmin: this.xmin - halfSize,
                 ymin: this.ymax - halfSize,
                 xmax: this.xmin + halfSize,
                 ymax: this.ymax + halfSize,
+            },
+            {
+                // Top center
+                xmin: this.xmin + (width / 2) - halfSize,
+                ymin: this.ymin - halfSize,
+                xmax: this.xmin + (width / 2) + halfSize,
+                ymax: this.ymin + halfSize,
+            },
+            {
+                // Right center
+                xmin: this.xmax - halfSize,
+                ymin: this.ymin + (height / 2) - halfSize,
+                xmax: this.xmax + halfSize,
+                ymax: this.ymin + (height / 2) + halfSize,
+            },
+            {
+                // Bottom center
+                xmin: this.xmin + (width / 2) - halfSize,
+                ymin: this.ymax - halfSize,
+                xmax: this.xmin + (width / 2) + halfSize,
+                ymax: this.ymax + halfSize,
+            },
+            {
+                // Left center
+                xmin: this.xmin - halfSize,
+                ymin: this.ymin + (height / 2) - halfSize,
+                xmax: this.xmin + halfSize,
+                ymax: this.ymin + (height / 2) + halfSize,
             },
         ];
     }
@@ -169,11 +210,12 @@ export default class Box {
         ctx.fillStyle = setAlpha(this.color, this.alpha);
         ctx.fill();
         if (this.isSelected) {
-            ctx.lineWidth = 4;
+            ctx.lineWidth = this.selectedThickness;
         } else {
-            ctx.lineWidth = 2;
+            ctx.lineWidth = this.thickness;
         }
         ctx.strokeStyle = setAlpha(this.color, 1);
+        
         ctx.stroke();
         ctx.closePath();
 
@@ -310,6 +352,22 @@ export default class Box {
                     this.ymax += deltaY;
                     this.xmin = clamp(this.xmin, 0, this.xmax - this.minSize);
                     this.ymax = clamp(this.ymax, this.ymin + this.minSize, canvasH);
+                    break;
+                case 4: // Top center handle
+                    this.ymin += deltaY;
+                    this.ymin = clamp(this.ymin, 0, this.ymax - this.minSize);
+                    break;
+                case 5: // Right center handle
+                    this.xmax += deltaX;
+                    this.xmax = clamp(this.xmax, this.xmin + this.minSize, canvasW);
+                    break;
+                case 6: // Bottom center handle
+                    this.ymax += deltaY;
+                    this.ymax = clamp(this.ymax, this.ymin + this.minSize, canvasH);
+                    break;
+                case 7: // Left center handle
+                    this.xmin += deltaX;
+                    this.xmin = clamp(this.xmin, 0, this.xmax - this.minSize);
                     break;
             }
             // Update the resize handles
