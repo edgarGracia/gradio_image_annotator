@@ -8,7 +8,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gradio_image_annotation"
-version = "0.0.6"
+version = "0.0.7"
 description = "A Gradio component that can be used to annotate images with bounding boxes."
 readme = "README.md"
 license = "MIT"

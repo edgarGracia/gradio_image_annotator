@@ -147,6 +147,45 @@ int | None
 </tr>
 
 <tr>
+<td align="left"><code>handle_size</code></td>
+<td align="left" style="width: 25%;">
+
+```python
+int | None
+```
+
+</td>
+<td align="left"><code>None</code></td>
+<td align="left">Size of the bounding box resize handles.</td>
+</tr>
+
+<tr>
+<td align="left"><code>box_thickness</code></td>
+<td align="left" style="width: 25%;">
+
+```python
+int | None
+```
+
+</td>
+<td align="left"><code>None</code></td>
+<td align="left">Thickness of the bounding box outline.</td>
+</tr>
+
+<tr>
+<td align="left"><code>box_selected_thickness</code></td>
+<td align="left" style="width: 25%;">
+
+```python
+int | None
+```
+
+</td>
+<td align="left"><code>None</code></td>
+<td align="left">Thickness of the bounding box outline when it is selected.</td>
+</tr>
+
+<tr>
 <td align="left"><code>height</code></td>
 <td align="left" style="width: 25%;">
 

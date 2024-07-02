@@ -28,6 +28,9 @@
 	export let labelList: string[];
 	export let labelColors: string[];
 	export let boxMinSize: number;
+	export let handleSize: number;
+	export let boxThickness: number;
+	export let boxSelectedThickness: number;
 
 	let upload: Upload;
 	let uploading = false;
@@ -96,7 +99,6 @@
 			formatter={async (value) => {
 				if (value === null) return "";
 				let url = await uploadToHuggingFace(value.image, "base64");
-				// let url = await uploadToHuggingFace(value, "base64");
 				return `<img src="${url}" />`;
 			}}
 			{value}
@@ -140,6 +142,9 @@
 					{labelColors}
 					{boxMinSize}
 					{interactive}
+					handleSize={handleSize}
+					boxThickness={boxThickness}
+					boxSelectedThickness={boxSelectedThickness}
 					src={value.image.url}
 				/>
 			</div>

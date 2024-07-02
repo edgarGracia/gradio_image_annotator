@@ -38,6 +38,9 @@
 	export let label_list: string[];
 	export let label_colors: string[];
 	export let box_min_size: number;
+	export let handle_size: number;
+	export let box_thickness: number;
+	export let box_selected_thickness: number;
 
 	export let gradio: Gradio<{
 		change: never;
@@ -105,6 +108,9 @@
 		}}
 		{label}
 		{show_label}
+		handleSize={handle_size}
+		boxThickness={box_thickness}
+		boxSelectedThickness={box_selected_thickness}
 	>
 		{#if active_source === "upload"}
 			<UploadText i18n={gradio.i18n} type="image" />
