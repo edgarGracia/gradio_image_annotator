@@ -1,4 +1,4 @@
-import S from "./__vite-browser-external-2447137e.js";
+import S from "./__vite-browser-external-DYxpcVy9.js";
 function z(s) {
   return s && s.__esModule && Object.prototype.hasOwnProperty.call(s, "default") ? s.default : s;
 }

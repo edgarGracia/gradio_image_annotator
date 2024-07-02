@@ -108,6 +108,9 @@
 		}}
 		{label}
 		{show_label}
+		max_file_size={gradio.max_file_size}
+		cli_upload={gradio.client.upload}
+		stream_handler={gradio.client.stream}
 		handleSize={handle_size}
 		boxThickness={box_thickness}
 		boxSelectedThickness={box_selected_thickness}

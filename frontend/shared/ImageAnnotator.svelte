@@ -5,7 +5,7 @@
 	import { uploadToHuggingFace } from "@gradio/utils";
 	import { BlockLabel, IconButton, ShareButton, SelectSource} from "@gradio/atoms";
 	import { Upload } from "@gradio/upload";
-	import type { FileData } from "@gradio/client";
+	import type { FileData, Client } from "@gradio/client";
 	import type { I18nFormatter, SelectData } from "@gradio/utils";
 	import { Clear } from "@gradio/icons";
 	import ImageCanvas from "./ImageCanvas.svelte";
@@ -31,6 +31,9 @@
 	export let handleSize: number;
 	export let boxThickness: number;
 	export let boxSelectedThickness: number;
+	export let max_file_size: number | null = null;
+	export let cli_upload: Client["upload"];
+	export let stream_handler: Client["stream_factory"];
 
 	let upload: Upload;
 	let uploading = false;
@@ -54,7 +57,7 @@
 		change: undefined;
 		clear: undefined;
 		drag: boolean;
-		upload: undefined;
+		upload?: never;
 		select: SelectData;
 	}>();
 
@@ -126,7 +129,10 @@
 			on:load={handle_upload}
 			on:error
 			{root}
+			{max_file_size}
 			disable_click={!sources.includes("upload")}
+			upload={cli_upload}
+			{stream_handler}
 		>
 			{#if value === null}
 				<slot />
