@@ -41,6 +41,7 @@
 	export let handle_size: number;
 	export let box_thickness: number;
 	export let box_selected_thickness: number;
+	export let disable_edit_boxes: boolean;
 
 	export let gradio: Gradio<{
 		change: never;
@@ -114,6 +115,7 @@
 		handleSize={handle_size}
 		boxThickness={box_thickness}
 		boxSelectedThickness={box_selected_thickness}
+		disableEditBoxes={disable_edit_boxes}
 	>
 		{#if active_source === "upload"}
 			<UploadText i18n={gradio.i18n} type="image" />

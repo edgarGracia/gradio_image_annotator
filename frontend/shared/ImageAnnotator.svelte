@@ -30,6 +30,7 @@
 	export let boxMinSize: number;
 	export let handleSize: number;
 	export let boxThickness: number;
+	export let disableEditBoxes: boolean;
 	export let boxSelectedThickness: number;
 	export let max_file_size: number | null = null;
 	export let cli_upload: Client["upload"];
@@ -148,8 +149,9 @@
 					{labelColors}
 					{boxMinSize}
 					{interactive}
-					handleSize={handleSize}
-					boxThickness={boxThickness}
+					{handleSize}
+					{boxThickness}
+					{disableEditBoxes}
 					boxSelectedThickness={boxSelectedThickness}
 					src={value.image.url}
 				/>

@@ -17,6 +17,7 @@
 	export let value: null | AnnotatedImageData;
 	export let choices = [];
     export let choicesColors = [];
+	export let disableEditBoxes: boolean = false;
 
     let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
@@ -123,51 +124,75 @@
 	}
 
     function onAddBox() {
-		newModalVisible = true;
+		if (!disableEditBoxes){
+			newModalVisible = true;
+		} else {
+			createBox();
+		}
+	}
+
+	function createBox(
+		label = null,
+		color = null,
+		xmin = null,
+		ymin = null,
+		xmax = null,
+		ymax = null
+	){
+		if (color === null || color === "") {
+			color = Colors[value.boxes.length % Colors.length];
+		} else {
+			color = colorHexToRGB(color);
+		}
+		if (label === null){
+			label = "";
+		}
+		if (xmin === null){
+			xmin = (imageWidth / 3) / scaleFactor;
+		}
+		if (xmax === null){
+			xmax = ((imageWidth / 3)*2) / scaleFactor;
+		}
+		if (ymin === null){
+			ymin = (imageHeight / 3) / scaleFactor;
+		}
+		if (ymax === null){
+			ymax = ((imageHeight / 3)*2) / scaleFactor;
+		}
+		let box = new Box(
+			draw,
+			canvasXmin,
+			canvasYmin,
+			canvasXmax,
+			canvasYmax,
+			label,
+			Math.round(xmin),
+			Math.round(ymin),
+			Math.round(xmax),
+			Math.round(ymax),
+			color,
+			boxAlpha,
+			boxMinSize,
+			handleSize,
+			boxThickness,
+			boxSelectedThickness
+		);
+		value.boxes = [box, ...value.boxes];
+		draw();
+		dispatch("change");
 	}
 
 	function onModalNewChange(event) {
 		newModalVisible = false;
 		const { detail } = event;
-        let label = detail.label;
-        let color = detail.color;
 		let ok = detail.ok;
 		if (ok) {
-			if (color === null || color === "") {
-				color = Colors[value.boxes.length % Colors.length];
-			} else {
-				color = colorHexToRGB(color);
-			}
-			let xmin = (imageWidth / 3) / scaleFactor;
-			let xmax = ((imageWidth / 3)*2) / scaleFactor;
-			let ymin = (imageHeight / 3) / scaleFactor;
-			let ymax = ((imageHeight / 3)*2) / scaleFactor;
-			let box = new Box(
-				draw,
-				canvasXmin,
-				canvasYmin,
-				canvasXmax,
-				canvasYmax,
-				label,
-				Math.round(xmin),
-				Math.round(ymin),
-				Math.round(xmax),
-				Math.round(ymax),
-				color,
-				boxAlpha,
-				boxMinSize,
-				handleSize,
-				boxThickness,
-				boxSelectedThickness
-			);
-			value.boxes = [box, ...value.boxes];
-			draw();
-			dispatch("change");
+			createBox(detail.label, detail.color)
 		}
 	}
 
 	function onEditBox() {
-		if (selectedBox >= 0 && selectedBox < value.boxes.length) {
+		if (selectedBox >= 0 && selectedBox < value.boxes.length && !disableEditBoxes) {
 			editModalVisible = true;
 		}
 	}
@@ -363,10 +388,12 @@
 			class="icon"
 			on:click={() => onAddBox()}><Add/></button
 		>
-		<button
-			class="icon"
-			on:click={() => onEditBox()}><Edit/></button
-		>
+		{#if !disableEditBoxes}
+			<button
+				class="icon"
+				on:click={() => onEditBox()}><Edit/></button
+			>
+		{/if}
 		<button
 			class="icon"
 			on:click={() => onDeleteBox()}><Clear/></button

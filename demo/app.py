@@ -41,7 +41,11 @@ with gr.Blocks() as demo:
         button_get.click(get_boxes_json, annotator, json_boxes)
     with gr.Tab("Crop"):
         with gr.Row():
-            annotator_crop = image_annotator(example, image_type="numpy")
+            annotator_crop = image_annotator(
+                example,
+                image_type="numpy",
+                disable_edit_boxes=True
+            )
             image_crop = gr.Image()
         button_crop = gr.Button("Crop")
         button_crop.click(crop, annotator_crop, image_crop)

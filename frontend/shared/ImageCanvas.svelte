@@ -19,6 +19,7 @@
 	export let boxThickness: number;
 	export let boxSelectedThickness: number;
 	export let value: null | AnnotatedImageData;
+	export let disableEditBoxes: boolean;
 
 	let resolved_src: typeof src;
 
@@ -57,8 +58,9 @@
 	choices={labelList}
 	choicesColors={labelColors}
 	{boxMinSize}
-	handleSize={handleSize}
-	boxThickness={boxThickness}
-	boxSelectedThickness={boxSelectedThickness}
+	{handleSize}
+	{boxThickness}
+	{boxSelectedThickness}
+	{disableEditBoxes}
 	imageUrl={resolved_src}
 />
