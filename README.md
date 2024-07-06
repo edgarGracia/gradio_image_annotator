@@ -16,7 +16,30 @@ pip install gradio_image_annotation
 import gradio as gr
 from gradio_image_annotation import image_annotator
 
-example = {
+
+example_annotation = {
+    "image": "https://gradio-builds.s3.amazonaws.com/demo-files/base.png",
+    "boxes": [
+        {
+            "xmin": 636,
+            "ymin": 575,
+            "xmax": 801,
+            "ymax": 697,
+            "label": "Vehicle",
+            "color": (255, 0, 0)
+        },
+        {
+            "xmin": 360,
+            "ymin": 615,
+            "xmax": 386,
+            "ymax": 702,
+            "label": "Person",
+            "color": (0, 255, 0)
+        }
+    ]
+}
+
+example_crop = {
     "image": "https://raw.githubusercontent.com/gradio-app/gradio/main/guides/assets/logo.png",
     "boxes": [
         {
@@ -24,8 +47,7 @@ example = {
             "ymin": 70,
             "xmax": 530,
             "ymax": 500,
-            "label": "Gradio",
-            "color": (250, 185, 0),
+            "color": (100, 200, 255)
         }
     ]
 }
@@ -44,19 +66,25 @@ def crop(annotations):
 def get_boxes_json(annotations):
     return annotations["boxes"]
 
+
 with gr.Blocks() as demo:
     with gr.Tab("Object annotation"):
         annotator = image_annotator(
-            {"image": "https://gradio-builds.s3.amazonaws.com/demo-files/base.png"},
+            example_annotation,
             label_list=["Person", "Vehicle"],
             label_colors=[(0, 255, 0), (255, 0, 0)],
         )
         button_get = gr.Button("Get bounding boxes")
         json_boxes = gr.JSON()
         button_get.click(get_boxes_json, annotator, json_boxes)
+
     with gr.Tab("Crop"):
         with gr.Row():
-            annotator_crop = image_annotator(example, image_type="numpy")
+            annotator_crop = image_annotator(
+                example_crop,
+                image_type="numpy",
+                disable_edit_boxes=True
+            )
             image_crop = gr.Image()
         button_crop = gr.Button("Crop")
         button_crop.click(crop, annotator_crop, image_crop)
@@ -183,6 +211,19 @@ int | None
 </td>
 <td align="left"><code>None</code></td>
 <td align="left">Thickness of the bounding box outline when it is selected.</td>
+</tr>
+
+<tr>
+<td align="left"><code>disable_edit_boxes</code></td>
+<td align="left" style="width: 25%;">
+
+```python
+bool | None
+```
+
+</td>
+<td align="left"><code>None</code></td>
+<td align="left">Disables the ability to set and edit the label and color of the boxes.</td>
 </tr>
 
 <tr>
