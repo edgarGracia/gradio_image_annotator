@@ -25,12 +25,14 @@ export default class Box {
     isDragging: boolean;
     isResizing: boolean;
     isSelected: boolean;
+    isCreating: boolean;
     offsetMouseX: number;
     offsetMouseY: number;
     resizeHandleSize: number;
     resizingHandleIndex: number;
     minSize: number;
     renderCallBack: () => void;
+    onFinishCreation: () => void;
     canvasXmin: number;
     canvasYmin: number;
     canvasXmax: number;
@@ -38,6 +40,8 @@ export default class Box {
     scaleFactor: number;
     thickness: number;
     selectedThickness: number;
+    creatingAnchorX: string;
+    creatingAnchorY: string;
     resizeHandles: {
         xmin: number;
         ymin: number;
@@ -47,6 +51,7 @@ export default class Box {
 
     constructor(
         renderCallBack: () => void,
+        onFinishCreation: () => void,
         canvasXmin: number,
         canvasYmin: number,
         canvasXmax: number,
@@ -62,9 +67,10 @@ export default class Box {
         handleSize: number = 8,
         thickness: number = 2,
         selectedThickness: number = 4,
-        scaleFactor: number = 1
+        scaleFactor: number = 1,
     ) {
         this.renderCallBack = renderCallBack;
+        this.onFinishCreation = onFinishCreation;
         this.canvasXmin = canvasXmin;
         this.canvasYmin = canvasYmin;
         this.canvasXmax = canvasXmax;
@@ -72,6 +78,7 @@ export default class Box {
         this.scaleFactor = scaleFactor;
         this.label = label;
         this.isDragging = false;
+        this.isCreating = false;
         this.xmin = xmin;
         this.ymin = ymin;
         this.xmax = xmax;
@@ -88,6 +95,8 @@ export default class Box {
         this.minSize = minSize;
         this.color = color;
         this.alpha = alpha;
+        this.creatingAnchorX = "xmin";
+        this.creatingAnchorY = "ymin";
     }
 
     toJSON() {
@@ -309,6 +318,68 @@ export default class Box {
             }
         }
         return -1;
+    }
+
+    startCreating(event: MouseEvent, canvasX: number, canvasY: number): void {
+        this.isCreating = true;
+        this.offsetMouseX = canvasX;
+        this.offsetMouseY = canvasY;
+        document.addEventListener("mousemove", this.handleCreating);
+        document.addEventListener("mouseup", this.stopCreating);
+    }
+
+    handleCreating = (event: MouseEvent): void => {
+        if (this.isCreating) {
+            let [x, y] = this.toBoxCoordinates(event.clientX, event.clientY);
+            x -= this.offsetMouseX;
+            y -= this.offsetMouseY;
+
+            if (x > this.xmax) {
+                if (this.creatingAnchorX == "xmax") {
+                    this.xmin = this.xmax;
+                }
+                this.xmax = x;
+                this.creatingAnchorX = "xmin";
+            } else if (x > this.xmin && x < this.xmax && this.creatingAnchorX == "xmin") {
+                this.xmax = x;
+            } else if (x > this.xmin && x < this.xmax && this.creatingAnchorX == "xmax") {
+                this.xmin = x;
+            } else if (x < this.xmin) {
+                if (this.creatingAnchorX == "xmin") {
+                    this.xmax = this.xmin;
+                }
+                this.xmin = x;
+                this.creatingAnchorX = "xmax";
+            }
+
+            if (y > this.ymax) {
+                if (this.creatingAnchorY == "ymax") {
+                    this.ymin = this.ymax;
+                }
+                this.ymax = y;
+                this.creatingAnchorY = "ymin";
+            } else if (y > this.ymin && y < this.ymax && this.creatingAnchorY == "ymin") {
+                this.ymax = y;
+            } else if (y > this.ymin && y < this.ymax && this.creatingAnchorY == "ymax") {
+                this.ymin = y;
+            } else if (y < this.ymin) {
+                if (this.creatingAnchorY == "ymin") {
+                    this.ymax = this.ymin;
+                }
+                this.ymin = y;
+                this.creatingAnchorY = "ymax";
+            }
+
+            this.updateHandles();
+            this.renderCallBack();
+        }
+    }
+    
+    stopCreating = (event: MouseEvent): void => {
+        this.isCreating = false;
+        document.removeEventListener("mousemove", this.handleCreating);
+        document.removeEventListener("mouseup", this.stopCreating);
+        this.onFinishCreation();
     }
 
     startResize(handleIndex: number, event: MouseEvent): void {

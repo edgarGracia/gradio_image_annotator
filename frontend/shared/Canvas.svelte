@@ -1,11 +1,13 @@
 <script lang="ts">
     import { onMount, onDestroy, createEventDispatcher } from "svelte";
-	import { Clear, Edit } from "@gradio/icons";
-	import { Add } from "./icons/index";
+	import { Clear } from "@gradio/icons";
+	import { BoundingBox, Hand } from "./icons/index";
 	import ModalBox from "./ModalBox.svelte";
 	import Box from "./Box";
 	import { Colors } from './Colors.js';
 	import AnnotatedImageData from "./AnnotatedImageData";
+
+	enum Mode {creation, drag}
 
     export let imageUrl: string | null = null;
 	export let interactive: boolean;
@@ -23,6 +25,7 @@
 	let ctx: CanvasRenderingContext2D;
     let image = null;
 	let selectedBox = -1;
+	let mode: Mode = Mode.drag; 
 
 	let canvasXmin = 0;
 	let canvasYmin = 0;
@@ -81,11 +84,19 @@
 		if (!interactive) {
 			return;
 		}
+		
+		if (mode === Mode.creation){
+			createBox(event);
+		} else if (mode === Mode.drag) {
+			clickBox(event);
+		}
+	}
 
+	function clickBox(event: MouseEvent) {
 		const rect = canvas.getBoundingClientRect();
 		const mouseX = event.clientX - rect.left;
 		const mouseY = event.clientY - rect.top;
-		
+
 		// Check if the mouse is over any of the resizing handles
 		for (const [i, box] of value.boxes.entries()) {
 			const handleIndex = box.indexOfPointInsideHandle(mouseX, mouseY);
@@ -123,71 +134,117 @@
 		}
 	}
 
-    function onAddBox() {
-		if (!disableEditBoxes){
-			newModalVisible = true;
-		} else {
-			createBox();
-		}
-	}
-
-	function createBox(
-		label = null,
-		color = null,
-		xmin = null,
-		ymin = null,
-		xmax = null,
-		ymax = null
-	){
-		if (color === null || color === "") {
-			color = Colors[value.boxes.length % Colors.length];
-		} else {
-			color = colorHexToRGB(color);
-		}
-		if (label === null){
-			label = "";
-		}
-		if (xmin === null){
-			xmin = (imageWidth / 3) / scaleFactor;
-		}
-		if (xmax === null){
-			xmax = ((imageWidth / 3)*2) / scaleFactor;
-		}
-		if (ymin === null){
-			ymin = (imageHeight / 3) / scaleFactor;
-		}
-		if (ymax === null){
-			ymax = ((imageHeight / 3)*2) / scaleFactor;
-		}
+	function createBox(event: MouseEvent) {
+		const rect = canvas.getBoundingClientRect();
+		const x = (event.clientX - rect.left - canvasXmin) / scaleFactor;
+		const y = (event.clientY - rect.top - canvasYmin) / scaleFactor;
 		let box = new Box(
 			draw,
+			onBoxFinishCreation,
 			canvasXmin,
 			canvasYmin,
 			canvasXmax,
 			canvasYmax,
-			label,
-			Math.round(xmin),
-			Math.round(ymin),
-			Math.round(xmax),
-			Math.round(ymax),
-			color,
+			"",
+			x,
+			y,
+			x,
+			y,
+			Colors[value.boxes.length % Colors.length],
 			boxAlpha,
 			boxMinSize,
 			handleSize,
 			boxThickness,
 			boxSelectedThickness
 		);
+		box.startCreating(event, rect.left, rect.top);
 		value.boxes = [box, ...value.boxes];
+		selectBox(0);
 		draw();
 		dispatch("change");
 	}
 
-	function onModalNewChange(event) {
-		newModalVisible = false;
-		const { detail } = event;
-		let ok = detail.ok;
-		if (ok) {
-			createBox(detail.label, detail.color)
+    // function onAddBox() {
+	// 	if (!disableEditBoxes){
+	// 		newModalVisible = true;
+	// 	} else {
+	// 		createBox();
+	// 	}
+	// }
+
+	function setCreateMode() {
+		mode = Mode.creation;
+		canvas.style.cursor = "crosshair";
+	}
+
+	function setDragMode() {
+		mode = Mode.drag;
+		canvas.style.cursor = "default";
+	}
+
+	// function createBox(
+	// 	label = null,
+	// 	color = null,
+	// 	xmin = null,
+	// 	ymin = null,
+	// 	xmax = null,
+	// 	ymax = null
+	// ){
+	// 	if (color === null || color === "") {
+	// 		color = Colors[value.boxes.length % Colors.length];
+	// 	} else {
+	// 		color = colorHexToRGB(color);
+	// 	}
+	// 	if (label === null){
+	// 		label = "";
+	// 	}
+	// 	if (xmin === null){
+	// 		xmin = (imageWidth / 3) / scaleFactor;
+	// 	}
+	// 	if (xmax === null){
+	// 		xmax = ((imageWidth / 3)*2) / scaleFactor;
+	// 	}
+	// 	if (ymin === null){
+	// 		ymin = (imageHeight / 3) / scaleFactor;
+	// 	}
+	// 	if (ymax === null){
+	// 		ymax = ((imageHeight / 3)*2) / scaleFactor;
+	// 	}
+	// 	let box = new Box(
+	// 		draw,
+	// 		canvasXmin,
+	// 		canvasYmin,
+	// 		canvasXmax,
+	// 		canvasYmax,
+	// 		label,
+	// 		Math.round(xmin),
+	// 		Math.round(ymin),
+	// 		Math.round(xmax),
+	// 		Math.round(ymax),
+	// 		color,
+	// 		boxAlpha,
+	// 		boxMinSize,
+	// 		handleSize,
+	// 		boxThickness,
+	// 		boxSelectedThickness
+	// 	);
+	// 	value.boxes = [box, ...value.boxes];
+	// 	draw();
+	// 	dispatch("change");
+	// }
+
+	// function onModalNewChange(event) {
+	// 	newModalVisible = false;
+	// 	const { detail } = event;
+	// 	let ok = detail.ok;
+	// 	if (ok) {
+	// 		createBox(detail.label, detail.color)
+	// 	}
+	// }
+
+	function onBoxFinishCreation() {
+		if (!disableEditBoxes){
+			editModalVisible = true;
 		}
 	}
 
@@ -293,6 +350,7 @@
 				}
 				box = new Box(
 					draw,
+					onBoxFinishCreation,
 					canvasXmin,
 					canvasYmin,
 					canvasXmax,
@@ -386,14 +444,12 @@
 	<span class="canvas-control">
 		<button
 			class="icon"
-			on:click={() => onAddBox()}><Add/></button
+			on:click={() => setCreateMode()}><BoundingBox/></button
 		>
-		{#if !disableEditBoxes}
-			<button
-				class="icon"
-				on:click={() => onEditBox()}><Edit/></button
-			>
-		{/if}
+		<button
+			class="icon"
+			on:click={() => setDragMode()}><Hand/></button
+		>
 		<button
 			class="icon"
 			on:click={() => onDeleteBox()}><Clear/></button
