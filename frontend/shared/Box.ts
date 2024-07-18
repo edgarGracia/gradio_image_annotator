@@ -197,6 +197,10 @@ export default class Box {
         return this.ymax - this.ymin;
     }
 
+    getArea(): number {
+        return this.getWidth() * this.getHeight();
+    }
+
     toCanvasCoordinates(x: number, y: number): [number, number] {
         x = x + this.canvasXmin;
         y = y + this.canvasYmin;
@@ -379,6 +383,48 @@ export default class Box {
         this.isCreating = false;
         document.removeEventListener("mousemove", this.handleCreating);
         document.removeEventListener("mouseup", this.stopCreating);
+
+        if (this.getArea() > 0) {
+            const canvasW = this.canvasXmax - this.canvasXmin;
+            const canvasH = this.canvasYmax - this.canvasYmin;
+            this.xmin = clamp(this.xmin, 0, canvasW - this.minSize);
+            this.ymin = clamp(this.ymin, 0, canvasH - this.minSize);
+            this.xmax = clamp(this.xmax, this.minSize, canvasW);
+            this.ymax = clamp(this.ymax, this.minSize, canvasH);
+
+            if (this.minSize > 0) {
+                if (this.getWidth() < this.minSize) {
+                    if (this.creatingAnchorX == "xmin") {
+                        this.xmax = this.xmin + this.minSize;
+                    } else {
+                        this.xmin = this.xmax - this.minSize;
+                    }
+                }
+                if (this.getHeight() < this.minSize) {
+                    if (this.creatingAnchorY == "ymin") {
+                        this.ymax = this.ymin + this.minSize;
+                    } else {
+                        this.ymin = this.ymax - this.minSize;
+                    }
+                }
+                if (this.xmax > canvasW) {
+                    this.xmin -= this.xmax - canvasW;
+                    this.xmax = canvasW;
+                } else if (this.xmin < 0) {
+                    this.xmax -= this.xmin;
+                    this.xmin = 0;
+                }
+                if (this.ymax > canvasH) {
+                    this.ymin -= this.ymax - canvasH;
+                    this.ymax = canvasH;
+                } else if (this.ymin < 0) {
+                    this.ymax -= this.ymin;
+                    this.ymin = 0;
+                }
+            }
+            this.updateHandles();
+            this.renderCallBack();
+        }
         this.onFinishCreation();
     }
 

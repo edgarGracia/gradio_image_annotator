@@ -25,7 +25,11 @@
 	let ctx: CanvasRenderingContext2D;
     let image = null;
 	let selectedBox = -1;
-	let mode: Mode = Mode.drag; 
+	let mode: Mode = Mode.drag;
+
+	if (value !== null && value.boxes.length == 0) {
+		mode = Mode.creation;
+	}
 
 	let canvasXmin = 0;
 	let canvasYmin = 0;
@@ -138,6 +142,13 @@
 		const rect = canvas.getBoundingClientRect();
 		const x = (event.clientX - rect.left - canvasXmin) / scaleFactor;
 		const y = (event.clientY - rect.top - canvasYmin) / scaleFactor;
+		let color;
+		if (choicesColors.length > 0) {
+			color = colorHexToRGB(choicesColors[0]);
+		} else {
+			color = Colors[value.boxes.length % Colors.length];
+		}
+		
 		let box = new Box(
 			draw,
 			onBoxFinishCreation,
@@ -150,7 +161,7 @@
 			y,
 			x,
 			y,
-			Colors[value.boxes.length % Colors.length],
+			color,
 			boxAlpha,
 			boxMinSize,
 			handleSize,
@@ -243,8 +254,12 @@
 	// }
 
 	function onBoxFinishCreation() {
-		if (!disableEditBoxes){
-			editModalVisible = true;
+		if (selectedBox >= 0 && selectedBox < value.boxes.length) {
+			if (value.boxes[selectedBox].getArea() < 1) {
+				onDeleteBox();
+			} else if (!disableEditBoxes){
+				editModalVisible = true;
+			}
 		}
 	}
 
@@ -468,7 +483,7 @@
 	/>
 {/if}
 
-{#if newModalVisible}
+<!-- {#if newModalVisible}
 	<ModalBox
 		on:change={onModalNewChange}
 		on:enter{onModalNewChange}
@@ -476,7 +491,7 @@
 		choicesColors={choicesColors}
 		color={Array.isArray(choicesColors) && choicesColors.length > 0 ? choicesColors[0] : colorRGBAToHex(Colors[value.boxes.length % Colors.length])}
 	/>
-{/if}
+{/if} -->
 
 <style>
     .canvas-annotator {
