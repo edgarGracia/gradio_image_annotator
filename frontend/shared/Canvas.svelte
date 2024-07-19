@@ -459,10 +459,14 @@
 	<span class="canvas-control">
 		<button
 			class="icon"
+			class:selected={mode === Mode.creation}
+			aria-label="Create box"
 			on:click={() => setCreateMode()}><BoundingBox/></button
 		>
 		<button
 			class="icon"
+			class:selected={mode === Mode.drag}
+			aria-label="Edit boxes"
 			on:click={() => setDragMode()}><Hand/></button
 		>
 		<button
@@ -529,6 +533,10 @@
 		color: var(--color-accent);
 	}
 	
+	.selected {
+		color: var(--color-accent);
+	}
+
 	.canvas-container:focus {
     	outline: none;
 	}
