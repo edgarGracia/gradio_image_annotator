@@ -11,16 +11,17 @@
     export let choicesColors = [];
     export let color = "";
     export let currentColor = "";
+    export let showRemove = true;
     
     const dispatch = createEventDispatcher<{
 		change: object;
 	}>();
 
-    function dispatchChange(ok: boolean) {
+    function dispatchChange(ret: number) {
         dispatch("change", {
             label: currentLabel,
             color: currentColor,
-            ok: ok
+            ret: ret // -1: remove, 0: cancel, 1: change
         });
     }
 
@@ -47,13 +48,13 @@
 
     function onDropDownEnter(event) {
         onDropDownChange(event);
-        dispatchChange(true);
+        dispatchChange(1);
     }
 
     function handleKeyPress(event: KeyboardEvent) {
 		switch (event.key) {
 			case "Enter":
-                dispatchChange(true);
+                dispatchChange(1);
 				break;
 		}
 	}
@@ -94,13 +95,21 @@
             </div>
             <div style="margin-right: 8px;">
                 <BaseButton
-                on:click={() => dispatchChange(false)}
+                on:click={() => dispatchChange(0)}
                 >Cancel</BaseButton>
             </div>
+            {#if showRemove}
+                <div style="margin-right: 8px;">
+                    <BaseButton
+                        variant="stop"
+                        on:click={() => dispatchChange(-1)}
+                    >Remove</BaseButton>
+                </div>
+            {/if}
             <div>
                 <BaseButton
                     variant="primary"
-                    on:click={() => dispatchChange(true)}
+                    on:click={() => dispatchChange(1)}
                 >OK</BaseButton>
             </div>
         </span>

@@ -175,14 +175,6 @@
 		dispatch("change");
 	}
 
-    // function onAddBox() {
-	// 	if (!disableEditBoxes){
-	// 		newModalVisible = true;
-	// 	} else {
-	// 		createBox();
-	// 	}
-	// }
-
 	function setCreateMode() {
 		mode = Mode.creation;
 		canvas.style.cursor = "crosshair";
@@ -193,72 +185,12 @@
 		canvas.style.cursor = "default";
 	}
 
-	// function createBox(
-	// 	label = null,
-	// 	color = null,
-	// 	xmin = null,
-	// 	ymin = null,
-	// 	xmax = null,
-	// 	ymax = null
-	// ){
-	// 	if (color === null || color === "") {
-	// 		color = Colors[value.boxes.length % Colors.length];
-	// 	} else {
-	// 		color = colorHexToRGB(color);
-	// 	}
-	// 	if (label === null){
-	// 		label = "";
-	// 	}
-	// 	if (xmin === null){
-	// 		xmin = (imageWidth / 3) / scaleFactor;
-	// 	}
-	// 	if (xmax === null){
-	// 		xmax = ((imageWidth / 3)*2) / scaleFactor;
-	// 	}
-	// 	if (ymin === null){
-	// 		ymin = (imageHeight / 3) / scaleFactor;
-	// 	}
-	// 	if (ymax === null){
-	// 		ymax = ((imageHeight / 3)*2) / scaleFactor;
-	// 	}
-	// 	let box = new Box(
-	// 		draw,
-	// 		canvasXmin,
-	// 		canvasYmin,
-	// 		canvasXmax,
-	// 		canvasYmax,
-	// 		label,
-	// 		Math.round(xmin),
-	// 		Math.round(ymin),
-	// 		Math.round(xmax),
-	// 		Math.round(ymax),
-	// 		color,
-	// 		boxAlpha,
-	// 		boxMinSize,
-	// 		handleSize,
-	// 		boxThickness,
-	// 		boxSelectedThickness
-	// 	);
-	// 	value.boxes = [box, ...value.boxes];
-	// 	draw();
-	// 	dispatch("change");
-	// }
-
-	// function onModalNewChange(event) {
-	// 	newModalVisible = false;
-	// 	const { detail } = event;
-	// 	let ok = detail.ok;
-	// 	if (ok) {
-	// 		createBox(detail.label, detail.color)
-	// 	}
-	// }
-
 	function onBoxFinishCreation() {
 		if (selectedBox >= 0 && selectedBox < value.boxes.length) {
 			if (value.boxes[selectedBox].getArea() < 1) {
 				onDeleteBox();
 			} else if (!disableEditBoxes){
-				editModalVisible = true;
+				newModalVisible = true;
 			}
 		}
 	}
@@ -282,13 +214,36 @@
 		const { detail } = event;
 		let label = detail.label;
 		let color = detail.color;
-		let ok = detail.ok;
-		if (ok && selectedBox >= 0 && selectedBox < value.boxes.length) {
+		let ret = detail.ret;
+		if (selectedBox >= 0 && selectedBox < value.boxes.length) {
 			let box = value.boxes[selectedBox];
-			box.label = label;
-			box.color = colorHexToRGB(color);
-			draw();
-			dispatch("change");
+			if (ret == 1) {
+				box.label = label;
+				box.color = colorHexToRGB(color);
+				draw();
+				dispatch("change");
+			} else if (ret == -1) {
+				onDeleteBox();
+			}
+		}
+	}
+
+	function onModalNewChange(event) {
+		newModalVisible = false;
+		const { detail } = event;
+		let label = detail.label;
+		let color = detail.color;
+		let ret = detail.ret;
+		if (selectedBox >= 0 && selectedBox < value.boxes.length) {
+			let box = value.boxes[selectedBox];
+			if (ret == 1) {
+				box.label = label;
+				box.color = colorHexToRGB(color);
+				draw();
+				dispatch("change");
+			} else {
+				onDeleteBox();
+			}
 		}
 	}
 
@@ -469,10 +424,6 @@
 			aria-label="Edit boxes"
 			on:click={() => setDragMode()}><Hand/></button
 		>
-		<button
-			class="icon"
-			on:click={() => onDeleteBox()}><Clear/></button
-		>
 	</span>
 {/if}
 
@@ -487,15 +438,17 @@
 	/>
 {/if}
 
-<!-- {#if newModalVisible}
+{#if newModalVisible}
 	<ModalBox
 		on:change={onModalNewChange}
 		on:enter{onModalNewChange}
 		choices={choices}
+		showRemove={false}
 		choicesColors={choicesColors}
-		color={Array.isArray(choicesColors) && choicesColors.length > 0 ? choicesColors[0] : colorRGBAToHex(Colors[value.boxes.length % Colors.length])}
+		label={selectedBox >= 0 && selectedBox < value.boxes.length ? value.boxes[selectedBox].label : ""}
+		color={selectedBox >= 0 && selectedBox < value.boxes.length ? colorRGBAToHex(value.boxes[selectedBox].color) : ""}
 	/>
-{/if} -->
+{/if}
 
 <style>
     .canvas-annotator {
