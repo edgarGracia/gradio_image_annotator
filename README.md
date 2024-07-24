@@ -467,7 +467,20 @@ bool | None
 
 </td>
 <td align="left"><code>True</code></td>
-<td align="left">If True, will show a clear button.</td>
+<td align="left">If True, will show a button to clear the current image.</td>
+</tr>
+
+<tr>
+<td align="left"><code>show_remove_button</code></td>
+<td align="left" style="width: 25%;">
+
+```python
+bool | None
+```
+
+</td>
+<td align="left"><code>None</code></td>
+<td align="left">If True, will show a button to remove the selected bounding box.</td>
 </tr>
 </tbody></table>
 

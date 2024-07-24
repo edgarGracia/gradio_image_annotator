@@ -20,6 +20,7 @@
 	export let boxSelectedThickness: number;
 	export let value: null | AnnotatedImageData;
 	export let disableEditBoxes: boolean;
+	export let showRemoveButton: boolean;
 
 	let resolved_src: typeof src;
 
@@ -62,5 +63,6 @@
 	{boxThickness}
 	{boxSelectedThickness}
 	{disableEditBoxes}
+	{showRemoveButton}
 	imageUrl={resolved_src}
 />

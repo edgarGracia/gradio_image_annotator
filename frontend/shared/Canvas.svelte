@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount, onDestroy, createEventDispatcher } from "svelte";
-	import { Clear } from "@gradio/icons";
-	import { BoundingBox, Hand } from "./icons/index";
+	import { BoundingBox, Hand, Trash } from "./icons/index";
 	import ModalBox from "./ModalBox.svelte";
 	import Box from "./Box";
 	import { Colors } from './Colors.js';
@@ -20,6 +19,11 @@
 	export let choices = [];
     export let choicesColors = [];
 	export let disableEditBoxes: boolean = false;
+	export let showRemoveButton: boolean = null;
+
+	if (showRemoveButton === null) {
+		showRemoveButton = (disableEditBoxes);
+	}
 
     let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
@@ -424,6 +428,13 @@
 			aria-label="Edit boxes"
 			on:click={() => setDragMode()}><Hand/></button
 		>
+		{#if showRemoveButton}
+			<button
+				class="icon"
+				aria-label="Remove boxes"
+				on:click={() => onDeleteBox()}><Trash/></button
+			>
+		{/if}
 	</span>
 {/if}
 
