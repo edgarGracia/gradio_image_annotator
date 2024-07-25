@@ -88,19 +88,26 @@
 		draw();
 	}
 
-    function handleMouseDown(event: MouseEvent) {
+	function handlePointerDown(event: PointerEvent) {
 		if (!interactive) {
 			return;
 		}
-		
-		if (mode === Mode.creation){
+
+		if (
+			event.target instanceof Element &&
+			event.target.hasPointerCapture(event.pointerId)
+		) {
+			event.target.releasePointerCapture(event.pointerId);
+		}
+
+		if (mode === Mode.creation) {
 			createBox(event);
 		} else if (mode === Mode.drag) {
 			clickBox(event);
 		}
 	}
 
-	function clickBox(event: MouseEvent) {
+	function clickBox(event: PointerEvent) {
 		const rect = canvas.getBoundingClientRect();
 		const mouseX = event.clientX - rect.left;
 		const mouseY = event.clientY - rect.top;
@@ -126,7 +133,7 @@
 		selectBox(-1);
 	}
 
-    function handleMouseUp(event: MouseEvent) {
+	function handlePointerUp(event: PointerEvent) {
 		dispatch("change");
 	}
 
@@ -142,7 +149,7 @@
 		}
 	}
 
-	function createBox(event: MouseEvent) {
+	function createBox(event: PointerEvent) {
 		const rect = canvas.getBoundingClientRect();
 		const x = (event.clientX - rect.left - canvasXmin) / scaleFactor;
 		const y = (event.clientY - rect.top - canvasYmin) / scaleFactor;
@@ -407,8 +414,8 @@
 >
 	<canvas
 		bind:this={canvas}
-		on:mousedown={handleMouseDown}
-		on:mouseup={handleMouseUp}
+		on:pointerdown={handlePointerDown}
+		on:pointerup={handlePointerUp}
 		on:dblclick={handleDoubleClick}
 		class="canvas-annotator"
 	></canvas>
