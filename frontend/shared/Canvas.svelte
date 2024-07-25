@@ -469,12 +469,13 @@
 {/if}
 
 <style>
-    .canvas-annotator {
-        border-color: var(--block-border-color);
+	.canvas-annotator {
+		border-color: var(--block-border-color);
 		width: 100%;
-  		height: 100%;
-  		display: block;
-    }
+		height: 100%;
+		display: block;
+		touch-action: none;
+	}
 
 	.canvas-control {
 		display: flex;
