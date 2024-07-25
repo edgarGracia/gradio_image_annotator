@@ -19,6 +19,7 @@
 	export let choices = [];
     export let choicesColors = [];
 	export let disableEditBoxes: boolean = false;
+	export let singleBox: boolean = false;
 	export let showRemoveButton: boolean = null;
 
 	if (showRemoveButton === null) {
@@ -149,6 +150,12 @@
 		let color;
 		if (choicesColors.length > 0) {
 			color = colorHexToRGB(choicesColors[0]);
+		} else if (singleBox) {
+			if (value.boxes.length > 0) {
+				color = value.boxes[0].color;
+			} else {
+				color = Colors[0];
+			}
 		} else {
 			color = Colors[value.boxes.length % Colors.length];
 		}
@@ -173,7 +180,11 @@
 			boxSelectedThickness
 		);
 		box.startCreating(event, rect.left, rect.top);
-		value.boxes = [box, ...value.boxes];
+		if (singleBox) {
+			value.boxes = [box];
+		} else {
+			value.boxes = [box, ...value.boxes];
+		}
 		selectBox(0);
 		draw();
 		dispatch("change");

@@ -42,6 +42,7 @@
 	export let box_thickness: number;
 	export let box_selected_thickness: number;
 	export let disable_edit_boxes: boolean;
+	export let single_box: boolean;
 	export let show_remove_button: boolean;
 
 	export let gradio: Gradio<{
@@ -117,6 +118,7 @@
 		boxThickness={box_thickness}
 		boxSelectedThickness={box_selected_thickness}
 		disableEditBoxes={disable_edit_boxes}
+		singleBox={single_box}
 		showRemoveButton={show_remove_button}
 	>
 		{#if active_source === "upload"}

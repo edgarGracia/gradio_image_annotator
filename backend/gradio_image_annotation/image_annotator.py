@@ -54,6 +54,7 @@ class image_annotator(Component):
         box_thickness: int | None = None,
         box_selected_thickness: int | None = None,
         disable_edit_boxes: bool | None = None,
+        single_box: bool = False,
         height: int | str | None = None,
         width: int | str | None = None,
         image_mode: Literal[
@@ -87,6 +88,7 @@ class image_annotator(Component):
             box_thickness: Thickness of the bounding box outline.
             box_selected_thickness: Thickness of the bounding box outline when it is selected.
             disable_edit_boxes: Disables the ability to set and edit the label and color of the boxes.
+            single_box: If True, at most one box can be drawn.
             height: The height of the displayed image, specified in pixels if a number is passed, or in CSS units if a string is passed.
             width: The width of the displayed image, specified in pixels if a number is passed, or in CSS units if a string is passed.
             image_mode: "RGB" if color, or "L" if black and white. See https://pillow.readthedocs.io/en/stable/handbook/concepts.html for other supported image modes and their meaning.
@@ -146,6 +148,7 @@ class image_annotator(Component):
         self.box_thickness = box_thickness
         self.box_selected_thickness = box_selected_thickness
         self.disable_edit_boxes = disable_edit_boxes
+        self.single_box = single_box
         if label_list:
             self.label_list = [(l, i) for i, l in enumerate(label_list)]
         else:

@@ -227,6 +227,19 @@ bool | None
 </tr>
 
 <tr>
+<td align="left"><code>single_box</code></td>
+<td align="left" style="width: 25%;">
+
+```python
+bool
+```
+
+</td>
+<td align="left"><code>False</code></td>
+<td align="left">If True, at most one box can be drawn. Drawing a box when one already exists will replace it.</td>
+</tr>
+
+<tr>
 <td align="left"><code>height</code></td>
 <td align="left" style="width: 25%;">
 

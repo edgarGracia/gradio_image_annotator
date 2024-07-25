@@ -31,6 +31,7 @@
 	export let handleSize: number;
 	export let boxThickness: number;
 	export let disableEditBoxes: boolean;
+	export let singleBox: boolean;
 	export let showRemoveButton: boolean;
 	export let boxSelectedThickness: number;
 	export let max_file_size: number | null = null;
@@ -152,6 +153,7 @@
 					{interactive}
 					{handleSize}
 					{boxThickness}
+					{singleBox}
 					{disableEditBoxes}
 					{showRemoveButton}
 					boxSelectedThickness={boxSelectedThickness}
