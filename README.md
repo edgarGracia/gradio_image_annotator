@@ -83,7 +83,8 @@ with gr.Blocks() as demo:
             annotator_crop = image_annotator(
                 example_crop,
                 image_type="numpy",
-                disable_edit_boxes=True
+                disable_edit_boxes=True,
+                single_box=True,
             )
             image_crop = gr.Image()
         button_crop = gr.Button("Crop")
@@ -236,7 +237,7 @@ bool
 
 </td>
 <td align="left"><code>False</code></td>
-<td align="left">If True, at most one box can be drawn. Drawing a box when one already exists will replace it.</td>
+<td align="left">If True, at most one box can be drawn.</td>
 </tr>
 
 <tr>

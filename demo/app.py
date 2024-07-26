@@ -68,7 +68,8 @@ with gr.Blocks() as demo:
             annotator_crop = image_annotator(
                 example_crop,
                 image_type="numpy",
-                disable_edit_boxes=True
+                disable_edit_boxes=True,
+                single_box=True,
             )
             image_crop = gr.Image()
         button_crop = gr.Button("Crop")
