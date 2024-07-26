@@ -298,6 +298,25 @@ class image_annotator(Component):
         
         return AnnotatedImageData(image=image, boxes=boxes)
 
+    def process_example(self, value: dict | None) -> FileData | None:
+        if value is None:
+            return None
+        if not isinstance(value, dict):
+            raise ValueError(f"``value`` must be a dict. Got {type(value)}")
+
+        image = value.setdefault("image", None)
+        if image is not None:
+            if isinstance(image, str) and image.lower().endswith(".svg"):
+                image = FileData(path=image, orig_name=Path(image).name)
+            else:
+                saved = image_utils.save_image(image, self.GRADIO_CACHE)
+                orig_name = Path(saved).name if Path(saved).exists() else None
+                image = FileData(path=saved, orig_name=orig_name)
+        else:
+            raise ValueError(f"An image must be provided. Got {value}")
+
+        return image
+
     def example_inputs(self) -> Any:
         return {
             "image": "https://raw.githubusercontent.com/gradio-app/gradio/main/guides/assets/logo.png",
