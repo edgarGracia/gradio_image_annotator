@@ -39,18 +39,32 @@ example_annotation = {
     ]
 }
 
-example_crop = {
-    "image": "https://raw.githubusercontent.com/gradio-app/gradio/main/guides/assets/logo.png",
-    "boxes": [
-        {
-            "xmin": 30,
-            "ymin": 70,
-            "xmax": 530,
-            "ymax": 500,
-            "color": (100, 200, 255)
-        }
-    ]
-}
+examples_crop = [
+    {
+        "image": "https://raw.githubusercontent.com/gradio-app/gradio/main/guides/assets/logo.png",
+        "boxes": [
+            {
+                "xmin": 30,
+                "ymin": 70,
+                "xmax": 530,
+                "ymax": 500,
+                "color": (100, 200, 255),
+            }
+        ],
+    },
+    {
+        "image": "https://gradio-builds.s3.amazonaws.com/demo-files/base.png",
+        "boxes": [
+            {
+                "xmin": 636,
+                "ymin": 575,
+                "xmax": 801,
+                "ymax": 697,
+                "color": (255, 0, 0),
+            },
+        ],
+    },
+]
 
 
 def crop(annotations):
@@ -81,7 +95,7 @@ with gr.Blocks() as demo:
     with gr.Tab("Crop"):
         with gr.Row():
             annotator_crop = image_annotator(
-                example_crop,
+                examples_crop[0],
                 image_type="numpy",
                 disable_edit_boxes=True,
                 single_box=True,
@@ -90,6 +104,7 @@ with gr.Blocks() as demo:
         button_crop = gr.Button("Crop")
         button_crop.click(crop, annotator_crop, image_crop)
 
+        gr.Examples(examples_crop, annotator_crop)
 
 if __name__ == "__main__":
     demo.launch()
