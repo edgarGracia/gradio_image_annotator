@@ -270,14 +270,14 @@ export default class Box {
         this.isDragging = true;
         this.offsetMouseX = event.clientX - this.xmin;
         this.offsetMouseY = event.clientY - this.ymin;
-        document.addEventListener("mousemove", this.handleDrag);
-        document.addEventListener("mouseup", this.stopDrag);
+        document.addEventListener("pointermove", this.handleDrag);
+        document.addEventListener("pointerup", this.stopDrag);
     }
 
     stopDrag = (): void => {
         this.isDragging = false;
-        document.removeEventListener("mousemove", this.handleDrag);
-        document.removeEventListener("mouseup", this.stopDrag);
+        document.removeEventListener("pointermove", this.handleDrag);
+        document.removeEventListener("pointerup", this.stopDrag);
     };
 
     handleDrag = (event: MouseEvent): void => {
@@ -328,8 +328,8 @@ export default class Box {
         this.isCreating = true;
         this.offsetMouseX = canvasX;
         this.offsetMouseY = canvasY;
-        document.addEventListener("mousemove", this.handleCreating);
-        document.addEventListener("mouseup", this.stopCreating);
+        document.addEventListener("pointermove", this.handleCreating);
+        document.addEventListener("pointerup", this.stopCreating);
     }
 
     handleCreating = (event: MouseEvent): void => {
@@ -381,8 +381,8 @@ export default class Box {
     
     stopCreating = (event: MouseEvent): void => {
         this.isCreating = false;
-        document.removeEventListener("mousemove", this.handleCreating);
-        document.removeEventListener("mouseup", this.stopCreating);
+        document.removeEventListener("pointermove", this.handleCreating);
+        document.removeEventListener("pointerup", this.stopCreating);
 
         if (this.getArea() > 0) {
             const canvasW = this.canvasXmax - this.canvasXmin;
@@ -433,8 +433,8 @@ export default class Box {
         this.isResizing = true;
         this.offsetMouseX = event.clientX - this.resizeHandles[handleIndex].xmin;
         this.offsetMouseY = event.clientY - this.resizeHandles[handleIndex].ymin;
-        document.addEventListener("mousemove", this.handleResize);
-        document.addEventListener("mouseup", this.stopResize);
+        document.addEventListener("pointermove", this.handleResize);
+        document.addEventListener("pointerup", this.stopResize);
     }
 
     handleResize = (event: MouseEvent): void => {
@@ -495,7 +495,7 @@ export default class Box {
 
     stopResize = (): void => {
         this.isResizing = false;
-        document.removeEventListener("mousemove", this.handleResize);
-        document.removeEventListener("mouseup", this.stopResize);
+        document.removeEventListener("pointermove", this.handleResize);
+        document.removeEventListener("pointerup", this.stopResize);
     };
 }
