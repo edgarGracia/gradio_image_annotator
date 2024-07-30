@@ -21,6 +21,7 @@
 	export let disableEditBoxes: boolean = false;
 	export let singleBox: boolean = false;
 	export let showRemoveButton: boolean = null;
+	export let handlesCursor: boolean = true;
 
 	if (showRemoveButton === null) {
 		showRemoveButton = (disableEditBoxes);
@@ -136,6 +137,30 @@
 
 	function handlePointerUp(event: PointerEvent) {
 		dispatch("change");
+	}
+
+	function handlePointerMove(event: PointerEvent) {
+		if (value === null) {
+			return;
+		}
+
+		if (mode !== Mode.drag) {
+			return;
+		}
+
+		const rect = canvas.getBoundingClientRect();
+		const mouseX = event.clientX - rect.left;
+		const mouseY = event.clientY - rect.top;
+
+		for (const [_, box] of value.boxes.entries()) {
+			const handleIndex = box.indexOfPointInsideHandle(mouseX, mouseY);
+			if (handleIndex >= 0) {
+				canvas.style.cursor = box.resizeHandles[handleIndex].cursor;
+				return;
+			}
+		}
+
+		canvas.style.cursor = "default";
 	}
 
 	function handleKeyPress(event: KeyboardEvent) {
@@ -427,6 +452,7 @@
 		bind:this={canvas}
 		on:pointerdown={handlePointerDown}
 		on:pointerup={handlePointerUp}
+		on:pointermove={handlesCursor ? handlePointerMove : null}
 		on:dblclick={handleDoubleClick}
 		class="canvas-annotator"
 	></canvas>

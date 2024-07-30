@@ -44,6 +44,7 @@
 	export let disable_edit_boxes: boolean;
 	export let single_box: boolean;
 	export let show_remove_button: boolean;
+	export let handles_cursor: boolean;
 
 	export let gradio: Gradio<{
 		change: never;
@@ -120,6 +121,7 @@
 		disableEditBoxes={disable_edit_boxes}
 		singleBox={single_box}
 		showRemoveButton={show_remove_button}
+		handlesCursor={handles_cursor}
 	>
 		{#if active_source === "upload"}
 			<UploadText i18n={gradio.i18n} type="image" />

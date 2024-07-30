@@ -33,6 +33,7 @@
 	export let disableEditBoxes: boolean;
 	export let singleBox: boolean;
 	export let showRemoveButton: boolean;
+	export let handlesCursor: boolean;
 	export let boxSelectedThickness: number;
 	export let max_file_size: number | null = null;
 	export let cli_upload: Client["upload"];
@@ -156,7 +157,8 @@
 					{singleBox}
 					{disableEditBoxes}
 					{showRemoveButton}
-					boxSelectedThickness={boxSelectedThickness}
+					{handlesCursor}
+					{boxSelectedThickness}
 					src={value.image.url}
 				/>
 			</div>
