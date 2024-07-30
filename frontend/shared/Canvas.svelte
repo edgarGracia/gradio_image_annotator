@@ -131,7 +131,10 @@
 				return;
 			}
 		}
-		selectBox(-1);
+
+		if (!singleBox) {
+			selectBox(-1);
+		}
 	}
 
 	function handlePointerUp(event: PointerEvent) {
@@ -189,6 +192,7 @@
 		box.startCreating(event, rect.left, rect.top);
 		if (singleBox) {
 			value.boxes = [box];
+			setDragMode();
 		} else {
 			value.boxes = [box, ...value.boxes];
 		}
@@ -273,6 +277,9 @@
 		if (selectedBox >= 0 && selectedBox < value.boxes.length) {
 			value.boxes.splice(selectedBox, 1);
 			selectBox(-1);
+			if (singleBox) {
+				setCreateMode();
+			}
 			dispatch("change");
 		}
 	}
@@ -398,6 +405,9 @@
 		ctx = canvas.getContext("2d");
 		observer.observe(canvas);
 
+		if (selectedBox < 0 && value !== null && value.boxes.length > 0) {
+			selectBox(0);
+		}
 		setImage();
 		resize();
 		draw();
