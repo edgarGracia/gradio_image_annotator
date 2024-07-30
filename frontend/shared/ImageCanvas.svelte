@@ -22,6 +22,7 @@
 	export let disableEditBoxes: boolean;
 	export let singleBox: boolean;
 	export let showRemoveButton: boolean;
+	export let handlesCursor: boolean;
 
 	let resolved_src: typeof src;
 
@@ -66,5 +67,6 @@
 	{disableEditBoxes}
 	{singleBox}
 	{showRemoveButton}
+	{handlesCursor}
 	imageUrl={resolved_src}
 />

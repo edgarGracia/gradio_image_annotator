@@ -76,6 +76,7 @@ class image_annotator(Component):
         show_share_button: bool | None = None,
         show_clear_button: bool | None = True,
         show_remove_button: bool | None = None,
+        handles_cursor: bool | None = True,
     ):
         """
         Parameters:
@@ -108,8 +109,9 @@ class image_annotator(Component):
             show_share_button: If True, will show a share icon in the corner of the component that allows user to share outputs to Hugging Face Spaces Discussions. If False, icon does not appear. If set to None (default behavior), then the icon appears if this Gradio app is launched on Spaces, but not otherwise.
             show_clear_button: If True, will show a button to clear the current image.
             show_remove_button: If True, will show a button to remove the selected bounding box.
+            handles_cursor: If True, the cursor will change when hovering over box handles in drag mode. Can be CPU-intensive.
         """
-        
+
         valid_types = ["numpy", "pil", "filepath"]
         if image_type not in valid_types:
             raise ValueError(
@@ -141,6 +143,7 @@ class image_annotator(Component):
         )
         self.show_clear_button = show_clear_button
         self.show_remove_button = show_remove_button
+        self.handles_cursor = handles_cursor
 
         self.boxes_alpha = boxes_alpha
         self.box_min_size = box_min_size
