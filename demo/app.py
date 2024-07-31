@@ -67,7 +67,7 @@ def get_boxes_json(annotations):
 
 
 with gr.Blocks() as demo:
-    with gr.Tab("Object annotation"):
+    with gr.Tab("Object annotation", id="tab_object_annotation"):
         annotator = image_annotator(
             example_annotation,
             label_list=["Person", "Vehicle"],
@@ -77,7 +77,7 @@ with gr.Blocks() as demo:
         json_boxes = gr.JSON()
         button_get.click(get_boxes_json, annotator, json_boxes)
 
-    with gr.Tab("Crop"):
+    with gr.Tab("Crop", id="tab_crop"):
         with gr.Row():
             annotator_crop = image_annotator(
                 examples_crop[0],
