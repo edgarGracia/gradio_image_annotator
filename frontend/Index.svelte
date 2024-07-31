@@ -13,7 +13,7 @@
 	import AnnotatedImageData from "./shared/AnnotatedImageData";
 	import ImageAnnotator from "./shared/ImageAnnotator.svelte";
 
-	type sources = "upload" | "clipboard" | null;
+	type sources = "upload" | "webcam" | "clipboard" | null;
 
 	export let elem_id = "";
 	export let elem_classes: string[] = [];
@@ -29,7 +29,11 @@
 	export let scale: number | null = null;
 	export let min_width: number | undefined = undefined;
 	export let loading_status: LoadingStatus;
-	export let sources: ("clipboard" | "upload")[] = ["upload", "clipboard"];
+	export let sources: ("upload" | "webcam" | "clipboard")[] = [
+		"upload",
+		"webcam",
+		"clipboard",
+	];
 	export let show_download_button: boolean;
 	export let show_share_button: boolean;
 	export let show_clear_button: boolean;

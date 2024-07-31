@@ -1,22 +1,23 @@
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
+	import { createEventDispatcher, tick } from "svelte";
 	import { Download, Image as ImageIcon } from "@gradio/icons";
 	import { DownloadLink } from "@gradio/wasm/svelte";
 	import { uploadToHuggingFace } from "@gradio/utils";
 	import { BlockLabel, IconButton, ShareButton, SelectSource} from "@gradio/atoms";
 	import { Upload } from "@gradio/upload";
+	import { Webcam } from "@gradio/image";
 	import type { FileData, Client } from "@gradio/client";
 	import type { I18nFormatter, SelectData } from "@gradio/utils";
 	import { Clear } from "@gradio/icons";
 	import ImageCanvas from "./ImageCanvas.svelte";
 	import AnnotatedImageData from "./AnnotatedImageData";
-	
-	type source_type = "upload" | "clipboard" | null;
+
+	type source_type = "upload" | "webcam" | "clipboard" | null;
 
 	export let value: null | AnnotatedImageData;
 	export let label: string | undefined = undefined;
 	export let show_label: boolean;
-	export let sources: source_type[] = ["upload", "clipboard"];
+	export let sources: source_type[] = ["upload", "webcam", "clipboard"];
 	export let selectable = false;
 	export let root: string;
 	export let interactive: boolean;
@@ -52,6 +53,19 @@
 	function handle_clear(): void {
 		clear();
 		dispatch("clear");
+		dispatch("change");
+	}
+
+	async function handle_save(img_blob: Blob | any): Promise<void> {
+		const f = await upload.load_files([new File([img_blob], `webcam.png`)]);
+		const image = f?.[0] || null;
+		if (image) {
+			value = new AnnotatedImageData();
+			value.image = image;
+		} else {
+			value = null;
+		}
+		await tick();
 		dispatch("change");
 	}
 
@@ -125,7 +139,7 @@
 <div data-testid="image" class="image-container">
 	<div class="upload-container">
 		<Upload
-			hidden={value !== null}
+			hidden={value !== null || active_source === "webcam"}
 			bind:this={upload}
 			bind:uploading
 			bind:dragging
@@ -142,6 +156,20 @@
 				<slot />
 			{/if}
 		</Upload>
+		{#if value === null && active_source === "webcam"}
+			<Webcam
+				{root}
+				on:capture={(e) => handle_save(e.detail)}
+				on:stream={(e) => handle_save(e.detail)}
+				on:error
+				on:drag
+				on:upload={(e) => handle_save(e.detail)}
+				mode="image"
+				include_audio={false}
+				{i18n}
+				{upload}
+			/>
+		{/if}
 		{#if value !== null}
 			<div class:selectable class="image-frame" >
 				<ImageCanvas
