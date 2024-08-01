@@ -60,7 +60,11 @@ class image_annotator(Component):
         image_mode: Literal[
             "1", "L", "P", "RGB", "RGBA", "CMYK", "YCbCr", "LAB", "HSV", "I", "F"
         ] = "RGB",
-        sources: list[Literal["upload", "clipboard"]] | None = ["upload", "clipboard"],
+        sources: list[Literal["upload", "webcam", "clipboard"]] | None = [
+            "upload",
+            "webcam",
+            "clipboard",
+        ],
         image_type: Literal["numpy", "pil", "filepath"] = "numpy",
         label: str | None = None,
         container: bool = True,
@@ -93,7 +97,7 @@ class image_annotator(Component):
             height: The height of the displayed image, specified in pixels if a number is passed, or in CSS units if a string is passed.
             width: The width of the displayed image, specified in pixels if a number is passed, or in CSS units if a string is passed.
             image_mode: "RGB" if color, or "L" if black and white. See https://pillow.readthedocs.io/en/stable/handbook/concepts.html for other supported image modes and their meaning.
-            sources: List of sources for the image. "upload" creates a box where user can drop an image file, "clipboard" allows users to paste an image from the clipboard. If None, defaults to ["upload", "clipboard"].
+            sources: List of sources for the image. "upload" creates a box where user can drop an image file, "webcam" allows user to take snapshot from their webcam, "clipboard" allows users to paste an image from the clipboard. If None, defaults to ["upload", "webcam", "clipboard"].
             image_type: The format the image is converted before being passed into the prediction function. "numpy" converts the image to a numpy array with shape (height, width, 3) and values from 0 to 255, "pil" converts the image to a PIL image object, "filepath" passes a str path to a temporary file containing the image. If the image is SVG, the `type` is ignored and the filepath of the SVG is returned.
             label: The label for this component. Appears above the component and is also used as the header if there are a table of examples for this component. If None and used in a `gr.Interface`, the label will be the name of the parameter this component is assigned to.
             container: If True, will place the component in a container - providing some extra padding around the border.
@@ -123,7 +127,7 @@ class image_annotator(Component):
         self.image_mode = image_mode
         
         self.sources = sources
-        valid_sources = ["upload", "clipboard", None]
+        valid_sources = ["upload", "clipboard", "webcam", None]
         if isinstance(sources, str):
             self.sources = [sources]
         if self.sources is None:
