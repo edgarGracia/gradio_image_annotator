@@ -82,7 +82,7 @@ def get_boxes_json(annotations):
 
 
 with gr.Blocks() as demo:
-    with gr.Tab("Object annotation"):
+    with gr.Tab("Object annotation", id="tab_object_annotation"):
         annotator = image_annotator(
             example_annotation,
             label_list=["Person", "Vehicle"],
@@ -92,7 +92,7 @@ with gr.Blocks() as demo:
         json_boxes = gr.JSON()
         button_get.click(get_boxes_json, annotator, json_boxes)
 
-    with gr.Tab("Crop"):
+    with gr.Tab("Crop", id="tab_crop"):
         with gr.Row():
             annotator_crop = image_annotator(
                 examples_crop[0],
@@ -309,12 +309,12 @@ int | str | None
 <td align="left" style="width: 25%;">
 
 ```python
-list["upload" | "clipboard"] | None
+list["upload" | "webcam" | "clipboard"] | None
 ```
 
 </td>
-<td align="left"><code>["upload", "clipboard"]</code></td>
-<td align="left">List of sources for the image. "upload" creates a box where user can drop an image file, "clipboard" allows users to paste an image from the clipboard. If None, defaults to ["upload", "clipboard"].</td>
+<td align="left"><code>["upload", "webcam", "clipboard"]</code></td>
+<td align="left">List of sources for the image. "upload" creates a box where user can drop an image file, "webcam" allows user to take snapshot from their webcam, "clipboard" allows users to paste an image from the clipboard. If None, defaults to ["upload", "webcam", "clipboard"].</td>
 </tr>
 
 <tr>
@@ -510,6 +510,19 @@ bool | None
 </td>
 <td align="left"><code>None</code></td>
 <td align="left">If True, will show a button to remove the selected bounding box.</td>
+</tr>
+
+<tr>
+<td align="left"><code>handles_cursor</code></td>
+<td align="left" style="width: 25%;">
+
+```python
+bool | None
+```
+
+</td>
+<td align="left"><code>True</code></td>
+<td align="left">If True, the cursor will change when hovering over box handles in drag mode. Can be CPU-intensive.</td>
 </tr>
 </tbody></table>
 
