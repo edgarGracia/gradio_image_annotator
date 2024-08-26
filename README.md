@@ -4,6 +4,8 @@
 
 A Gradio component that can be used to annotate images with bounding boxes.
 
+![Demo preview](images/demo.png)
+
 ## Installation
 
 ```bash
