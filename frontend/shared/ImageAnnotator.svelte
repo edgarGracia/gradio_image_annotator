@@ -50,12 +50,6 @@
 		dispatch("upload");
 	}
 
-	function handle_clear(): void {
-		clear();
-		dispatch("clear");
-		dispatch("change");
-	}
-
 	async function handle_save(img_blob: Blob | any): Promise<void> {
 		const f = await upload.load_files([new File([img_blob], `webcam.png`)]);
 		const image = f?.[0] || null;
@@ -101,6 +95,8 @@
 
 	function clear() {
 		value = null;
+		dispatch("clear");
+		dispatch("change");
 	}
 </script>
 
@@ -196,7 +192,7 @@
 		<SelectSource
 			{sources}
 			bind:active_source
-			{handle_clear}
+			handle_clear={clear}
 			handle_select={handle_select_source}
 		/>
 	{/if}
