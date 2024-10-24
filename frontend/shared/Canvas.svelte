@@ -217,7 +217,6 @@
 		box.startCreating(event, rect.left, rect.top);
 		if (singleBox) {
 			value.boxes = [box];
-			setDragMode();
 		} else {
 			value.boxes = [box, ...value.boxes];
 		}
@@ -240,8 +239,13 @@
 		if (selectedBox >= 0 && selectedBox < value.boxes.length) {
 			if (value.boxes[selectedBox].getArea() < 1) {
 				onDeleteBox();
-			} else if (!disableEditBoxes){
-				newModalVisible = true;
+			} else {
+				if (!disableEditBoxes) {
+					newModalVisible = true;
+				}
+				if (singleBox) {
+					setDragMode();
+				}
 			}
 		}
 	}
