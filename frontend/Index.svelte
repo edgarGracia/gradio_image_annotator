@@ -22,8 +22,8 @@
 	export let label: string;
 	export let show_label: boolean;
 	export let root: string;
-	export let height: number | undefined;
-	export let width: number | undefined;
+	export let height: number | string | undefined;
+	export let width: number | string | undefined;
 	export let _selectable = false;
 	export let container = true;
 	export let scale: number | null = null;
@@ -72,7 +72,6 @@
 	padding={false}
 	{elem_id}
 	{elem_classes}
-	height={height || undefined}
 	{width}
 	allow_overflow={false}
 	{container}
@@ -98,6 +97,8 @@
 		showClearButton={show_clear_button}
 		i18n={gradio.i18n}
 		boxesAlpha={boxes_alpha}
+		height={height}
+		width={width}
 		labelList={label_list}
 		labelColors={label_colors}
 		boxMinSize={box_min_size}

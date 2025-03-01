@@ -19,6 +19,8 @@
 	export let choices = [];
     export let choicesColors = [];
 	export let disableEditBoxes: boolean = false;
+	export let height: number | string = "100%";
+	export let width: number | string = "100%";
 	export let singleBox: boolean = false;
 	export let showRemoveButton: boolean = null;
 	export let handlesCursor: boolean = true;
@@ -468,6 +470,7 @@
 		on:pointerup={handlePointerUp}
 		on:pointermove={handlesCursor ? handlePointerMove : null}
 		on:dblclick={handleDoubleClick}
+		style="height: {height}; width: {width};"
 		class="canvas-annotator"
 	></canvas>
 </div>
@@ -558,6 +561,12 @@
 	
 	.selected {
 		color: var(--color-accent);
+	}
+
+	.canvas-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.canvas-container:focus {

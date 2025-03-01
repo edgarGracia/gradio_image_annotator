@@ -17,6 +17,8 @@
 	export let boxMinSize: number;
 	export let handleSize: number;
 	export let boxThickness: number;
+	export let height: number | string;
+	export let width: number | string;
 	export let boxSelectedThickness: number;
 	export let value: null | AnnotatedImageData;
 	export let disableEditBoxes: boolean;
@@ -60,6 +62,8 @@
 	boxAlpha={boxesAlpha}
 	choices={labelList}
 	choicesColors={labelColors}
+	{height}
+	{width}
 	{boxMinSize}
 	{handleSize}
 	{boxThickness}

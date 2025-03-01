@@ -30,6 +30,8 @@
 	export let labelColors: string[];
 	export let boxMinSize: number;
 	export let handleSize: number;
+	export let height: number | string;
+	export let width: number | string;
 	export let boxThickness: number;
 	export let disableEditBoxes: boolean;
 	export let singleBox: boolean;
@@ -167,10 +169,12 @@
 			/>
 		{/if}
 		{#if value !== null}
-			<div class:selectable class="image-frame" >
+			<div class:selectable class="image-frame">
 				<ImageCanvas
 					bind:value
 					on:change={() => dispatch("change")}
+					{height}
+					{width}
 					{boxesAlpha}
 					{labelList}
 					{labelColors}
