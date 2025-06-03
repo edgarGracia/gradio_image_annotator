@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 import warnings
 from pathlib import Path
-from typing import Any, List, Literal, cast
+from typing import Any, List, Optional, Literal, TypedDict, cast
 
 import numpy as np
 import PIL.Image
@@ -20,6 +20,13 @@ PIL.Image.init()  # fixes https://github.com/gradio-app/gradio/issues/2843
 class AnnotatedImageData(GradioModel):
     image: FileData
     boxes: List[dict] = []
+    orientation: int = 0
+
+
+class AnnotatedImageValue(TypedDict):
+    image: Optional[np.ndarray | PIL.Image.Image | str]
+    boxes: Optional[List[dict]]
+    orientation: Optional[int]
 
 
 def rgb2hex(r,g,b):
@@ -84,7 +91,7 @@ class image_annotator(Component):
     ):
         """
         Parameters:
-            value: A dict or None. The dictionary must contain a key 'image' with either an URL to an image, a numpy image or a PIL image. Optionally it may contain a key 'boxes' with a list of boxes. Each box must be a dict wit the keys: 'xmin', 'ymin', 'xmax' and 'ymax' with the absolute image coordinates of the box. Optionally can also include the keys 'label' and 'color' describing the label and color of the box. Color must be a tuple of RGB values (e.g. `(255,255,255)`).
+            value: A dict or None. The dictionary must contain a key 'image' with either an URL to an image, a numpy image or a PIL image. Optionally it may contain a key 'boxes' with a list of boxes. Each box must be a dict wit the keys: 'xmin', 'ymin', 'xmax' and 'ymax' with the absolute image coordinates of the box. Optionally can also include the keys 'label' and 'color' describing the label and color of the box. Color must be a tuple of RGB values (e.g. `(255,255,255)`). Optionally can also include the keys 'orientation' with a integer between 0 and 3, describing the number of times the image is rotated by 90 degrees in frontend, the rotation is clockwise.
             boxes_alpha: Opacity of the bounding boxes 0 and 1.
             label_list: List of valid labels.
             label_colors: Optional list of colors for each label when `label_list` is used. Colors must be a tuple of RGB values (e.g. `(255,255,255)`).
@@ -247,7 +254,7 @@ class image_annotator(Component):
             parsed_boxes.append(new_box)
         return parsed_boxes
 
-    def preprocess(self, payload: AnnotatedImageData | None) -> dict | None:
+    def preprocess(self, payload: AnnotatedImageData | None) -> AnnotatedImageValue | None:
         """
         Parameters:
             payload: an AnnotatedImageData object.
@@ -259,11 +266,12 @@ class image_annotator(Component):
         
         ret_value = {
             "image": self.preprocess_image(payload.image),
-            "boxes": self.preprocess_boxes(payload.boxes)
+            "boxes": self.preprocess_boxes(payload.boxes),
+            "orientation": payload.orientation,
         }
         return ret_value
 
-    def postprocess(self, value: dict | None) -> AnnotatedImageData | None:
+    def postprocess(self, value: AnnotatedImageValue | None) -> AnnotatedImageData | None:
         """
         Parameters:
             value: A dict with an image and an optional list of boxes or None.
@@ -303,7 +311,11 @@ class image_annotator(Component):
         else:
             raise ValueError(f"An image must be provided. Got {value}")
         
-        return AnnotatedImageData(image=image, boxes=boxes)
+        orientation = value.setdefault("orientation", 0)
+        if orientation is None:
+            orientation = 0
+
+        return AnnotatedImageData(image=image, boxes=boxes, orientation=orientation)
 
     def process_example(self, value: dict | None) -> FileData | None:
         if value is None:
