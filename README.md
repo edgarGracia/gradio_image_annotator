@@ -17,6 +17,7 @@ pip install gradio_image_annotation
 ```python
 import gradio as gr
 from gradio_image_annotation import image_annotator
+import numpy as np
 
 
 example_annotation = {
@@ -70,6 +71,8 @@ examples_crop = [
 
 
 def crop(annotations):
+    if angle := annotations.get("orientation", None):
+        annotations["image"] = np.rot90(annotations["image"], k=-angle)
     if annotations["boxes"]:
         box = annotations["boxes"][0]
         return annotations["image"][
@@ -137,7 +140,7 @@ dict | None
 
 </td>
 <td align="left"><code>None</code></td>
-<td align="left">A dict or None. The dictionary must contain a key 'image' with either an URL to an image, a numpy image or a PIL image. Optionally it may contain a key 'boxes' with a list of boxes. Each box must be a dict wit the keys: 'xmin', 'ymin', 'xmax' and 'ymax' with the absolute image coordinates of the box. Optionally can also include the keys 'label' and 'color' describing the label and color of the box. Color must be a tuple of RGB values (e.g. `(255,255,255)`).</td>
+<td align="left">A dict or None. The dictionary must contain a key 'image' with either an URL to an image, a numpy image or a PIL image. Optionally it may contain a key 'boxes' with a list of boxes. Each box must be a dict wit the keys: 'xmin', 'ymin', 'xmax' and 'ymax' with the absolute image coordinates of the box. Optionally can also include the keys 'label' and 'color' describing the label and color of the box. Color must be a tuple of RGB values (e.g. `(255,255,255)`). Optionally can also include the keys 'orientation' with a integer between 0 and 3, describing the number of times the image is rotated by 90 degrees in frontend, the rotation is clockwise.</td>
 </tr>
 
 <tr>
@@ -526,6 +529,19 @@ bool | None
 <td align="left"><code>True</code></td>
 <td align="left">If True, the cursor will change when hovering over box handles in drag mode. Can be CPU-intensive.</td>
 </tr>
+
+<tr>
+<td align="left"><code>use_default_label</code></td>
+<td align="left" style="width: 25%;">
+
+```python
+bool
+```
+
+</td>
+<td align="left"><code>False</code></td>
+<td align="left">If True, the first item in label_list will be used as the default label when creating boxes.</td>
+</tr>
 </tbody></table>
 
 
@@ -553,8 +569,16 @@ The code snippet below is accurate in cases where the component is used as both 
 
  ```python
  def predict(
-     value: dict | None
- ) -> dict | None:
+     value: AnnotatedImageValue | None
+ ) -> AnnotatedImageValue | None:
      return value
  ```
  
+
+## `AnnotatedImageValue`
+```python
+class AnnotatedImageValue(TypedDict):
+    image: Optional[np.ndarray | PIL.Image.Image | str]
+    boxes: Optional[List[dict]]
+    orientation: Optional[int]
+```
