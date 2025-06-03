@@ -4,6 +4,7 @@
     import { BaseDropdown } from "./patched_dropdown/Index.svelte";
 	import { createEventDispatcher } from "svelte";
     import { onMount, onDestroy } from "svelte";
+    import { Lock, Unlock } from "./icons/index";
 
     export let label = "";
     export let currentLabel = "";
@@ -12,6 +13,7 @@
     export let color = "";
     export let currentColor = "";
     export let showRemove = true;
+    export let labelDetailLock = false;
     
     const dispatch = createEventDispatcher<{
 		change: object;
@@ -21,6 +23,7 @@
         dispatch("change", {
             label: currentLabel,
             color: currentColor,
+            lock: labelDetailLock,
             ret: ret // -1: remove, 0: cancel, 1: change
         });
     }
@@ -51,6 +54,10 @@
         dispatchChange(1);
     }
 
+    function onLockClick(event) {
+        labelDetailLock = !labelDetailLock;
+    }
+
     function handleKeyPress(event: KeyboardEvent) {
 		switch (event.key) {
 			case "Enter":
@@ -74,6 +81,17 @@
 <div class="modal" id="model-box-edit">
     <div class="modal-container">
         <span class="model-content">
+            {#if !showRemove}
+            <div style="margin-right: 8px;">
+                <button
+                class="icon"
+                class:selected={labelDetailLock === true}
+                aria-label="Lock label detail"
+                on:click={onLockClick}>
+                {#if labelDetailLock}<Lock/>{:else}<Unlock/>{/if}</button
+                >
+            </div>
+            {/if}
             <div style="margin-right: 10px;">
                 <BaseDropdown
                     value={currentLabel}
@@ -148,4 +166,21 @@
         display: flex;
         align-items: flex-end;
     }
+
+    .icon {
+		width: 22px;
+		height: 22px;
+		margin: var(--spacing-lg) var(--spacing-xs);
+		padding: var(--spacing-xs);
+		color: var(--neutral-400);
+		border-radius: var(--radius-md);
+	}
+
+    .icon:hover{
+		color: var(--color-accent);
+	}
+
+    .selected {
+		color: var(--color-accent);
+	}
 </style>
