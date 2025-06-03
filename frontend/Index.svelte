@@ -49,6 +49,7 @@
 	export let single_box: boolean;
 	export let show_remove_button: boolean;
 	export let handles_cursor: boolean;
+	export let use_default_label: boolean;
 
 	export let gradio: Gradio<{
 		change: never;
@@ -127,6 +128,7 @@
 		singleBox={single_box}
 		showRemoveButton={show_remove_button}
 		handlesCursor={handles_cursor}
+		useDefaultLabel={use_default_label}
 	>
 		{#if active_source === "upload"}
 			<UploadText i18n={gradio.i18n} type="image" />
