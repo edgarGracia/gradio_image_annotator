@@ -1,3 +1,4 @@
+import WindowViewer from "./WindowViewer";
 const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max)
 
 
@@ -20,6 +21,10 @@ export default class Box {
     ymin: number;
     xmax: number;
     ymax: number;
+    _xmin: number;
+    _ymin: number;
+    _xmax: number;
+    _ymax: number;
     color: string;
     alpha: number;
     isDragging: boolean;
@@ -49,10 +54,12 @@ export default class Box {
         ymax: number;
         cursor: string;
     }[];
+    canvasWindow: WindowViewer;
 
     constructor(
         renderCallBack: () => void,
         onFinishCreation: () => void,
+        canvasWindow: WindowViewer,
         canvasXmin: number,
         canvasYmin: number,
         canvasXmax: number,
@@ -72,6 +79,7 @@ export default class Box {
     ) {
         this.renderCallBack = renderCallBack;
         this.onFinishCreation = onFinishCreation;
+        this.canvasWindow = canvasWindow;
         this.canvasXmin = canvasXmin;
         this.canvasYmin = canvasYmin;
         this.canvasXmax = canvasXmax;
@@ -80,10 +88,14 @@ export default class Box {
         this.label = label;
         this.isDragging = false;
         this.isCreating = false;
-        this.xmin = xmin;
-        this.ymin = ymin;
-        this.xmax = xmax;
-        this.ymax = ymax;
+        this._xmin = xmin;
+        this._ymin = ymin;
+        this._xmax = xmax;
+        this._ymax = ymax;
+        this.xmin = this._xmin * this.canvasWindow.scale;
+        this.ymin = this._ymin * this.canvasWindow.scale;
+        this.xmax = this._xmax * this.canvasWindow.scale;
+        this.ymax = this._ymax * this.canvasWindow.scale;
         this.isResizing = false;
         this.isSelected = false;
         this.offsetMouseX = 0;
@@ -103,10 +115,10 @@ export default class Box {
     toJSON() {
         return {
             label: this.label,
-            xmin: this.xmin,
-            ymin: this.ymin,
-            xmax: this.xmax,
-            ymax: this.ymax,
+            xmin: this._xmin,
+            ymin: this._ymin,
+            xmax: this._xmax,
+            ymax: this._ymax,
             color: this.color,
             scaleFactor: this.scaleFactor,
         };
@@ -118,11 +130,12 @@ export default class Box {
 
     setScaleFactor(scaleFactor: number) {
         let scale = scaleFactor / this.scaleFactor;
-        this.xmin = Math.round(this.xmin * scale);
-        this.ymin = Math.round(this.ymin * scale);
-        this.xmax = Math.round(this.xmax * scale);
-        this.ymax = Math.round(this.ymax * scale);
-        this.updateHandles();
+        this._xmin = Math.round(this._xmin * scale);
+        this._ymin = Math.round(this._ymin * scale);
+        this._xmax = Math.round(this._xmax * scale);
+        this._ymax = Math.round(this._ymax * scale);
+        this.applyUserScale();
+        // this.updateHandles();
         this.scaleFactor = scaleFactor;
     }
 
@@ -222,9 +235,25 @@ export default class Box {
         return [x, y];
     }
 
+    applyUserScale(): void {
+        this.xmin = this._xmin * this.canvasWindow.scale;
+        this.ymin = this._ymin * this.canvasWindow.scale;
+        this.xmax = this._xmax * this.canvasWindow.scale;
+        this.ymax = this._ymax * this.canvasWindow.scale;
+        this.updateHandles();
+    }
+
+    updateOffset(): void {
+        this.canvasXmin = this.canvasWindow.offsetX;
+        this.canvasYmin = this.canvasWindow.offsetY;
+        this.canvasXmax = this.canvasWindow.offsetX + this.canvasWindow.imageWidth * this.canvasWindow.scale;
+        this.canvasYmax = this.canvasWindow.offsetY + this.canvasWindow.imageHeight * this.canvasWindow.scale;
+        this.applyUserScale();
+    }
     render(ctx: CanvasRenderingContext2D): void {
         let xmin: number, ymin: number;
 
+        this.updateOffset()
         // Render the box and border
         ctx.beginPath();
         [xmin, ymin] = this.toCanvasCoordinates(this.xmin, this.ymin);
@@ -277,8 +306,8 @@ export default class Box {
 
     startDrag(event: MouseEvent): void {
         this.isDragging = true;
-        this.offsetMouseX = event.clientX - this.xmin;
-        this.offsetMouseY = event.clientY - this.ymin;
+        this.offsetMouseX = event.clientX - this._xmin * this.canvasWindow.scale;
+        this.offsetMouseY = event.clientY - this._ymin * this.canvasWindow.scale;
         document.addEventListener("pointermove", this.handleDrag);
         document.addEventListener("pointerup", this.stopDrag);
     }
@@ -291,17 +320,20 @@ export default class Box {
 
     handleDrag = (event: MouseEvent): void => {
         if (this.isDragging) {
-            let deltaX = event.clientX - this.offsetMouseX - this.xmin;
-            let deltaY = event.clientY - this.offsetMouseY - this.ymin;
-            const canvasW = this.canvasXmax - this.canvasXmin;
-            const canvasH = this.canvasYmax - this.canvasYmin;
-            deltaX = clamp(deltaX, -this.xmin, canvasW-this.xmax);
-            deltaY = clamp(deltaY, -this.ymin, canvasH-this.ymax);
-            this.xmin += deltaX;
-            this.ymin += deltaY;
-            this.xmax += deltaX;
-            this.ymax += deltaY;
-            this.updateHandles();
+            let deltaX = (event.clientX - this.offsetMouseX) / this.canvasWindow.scale - this._xmin;
+            let deltaY = (event.clientY - this.offsetMouseY) / this.canvasWindow.scale - this._ymin;
+
+            const canvasW = (this.canvasXmax - this.canvasXmin) / this.canvasWindow.scale;
+            const canvasH = (this.canvasYmax - this.canvasYmin) / this.canvasWindow.scale;
+            deltaX = clamp(deltaX, -this._xmin, canvasW-this._xmax);
+            deltaY = clamp(deltaY, -this._ymin, canvasH-this._ymax);
+            this._xmin += deltaX;
+            this._ymin += deltaY;
+            this._xmax += deltaX;
+            this._ymax += deltaY;
+
+            this.applyUserScale();
+            // this.updateHandles();
             this.renderCallBack();
         }
     };
@@ -344,46 +376,46 @@ export default class Box {
     handleCreating = (event: MouseEvent): void => {
         if (this.isCreating) {
             let [x, y] = this.toBoxCoordinates(event.clientX, event.clientY);
-            x -= this.offsetMouseX;
-            y -= this.offsetMouseY;
+            x = (x - this.offsetMouseX) / this.canvasWindow.scale;
+            y = (y - this.offsetMouseY) / this.canvasWindow.scale;
 
-            if (x > this.xmax) {
+            if (x > this._xmax) {
                 if (this.creatingAnchorX == "xmax") {
-                    this.xmin = this.xmax;
+                    this._xmin = this._xmax;
                 }
-                this.xmax = x;
+                this._xmax = x;
                 this.creatingAnchorX = "xmin";
-            } else if (x > this.xmin && x < this.xmax && this.creatingAnchorX == "xmin") {
-                this.xmax = x;
-            } else if (x > this.xmin && x < this.xmax && this.creatingAnchorX == "xmax") {
-                this.xmin = x;
-            } else if (x < this.xmin) {
+            } else if (x > this._xmin && x < this._xmax && this.creatingAnchorX == "xmin") {
+                this._xmax = x;
+            } else if (x > this._xmin && x < this._xmax && this.creatingAnchorX == "xmax") {
+                this._xmin = x;
+            } else if (x < this._xmin) {
                 if (this.creatingAnchorX == "xmin") {
-                    this.xmax = this.xmin;
+                    this._xmax = this._xmin;
                 }
-                this.xmin = x;
+                this._xmin = x;
                 this.creatingAnchorX = "xmax";
             }
 
-            if (y > this.ymax) {
+            if (y > this._ymax) {
                 if (this.creatingAnchorY == "ymax") {
-                    this.ymin = this.ymax;
+                    this._ymin = this._ymax;
                 }
-                this.ymax = y;
+                this._ymax = y;
                 this.creatingAnchorY = "ymin";
-            } else if (y > this.ymin && y < this.ymax && this.creatingAnchorY == "ymin") {
-                this.ymax = y;
-            } else if (y > this.ymin && y < this.ymax && this.creatingAnchorY == "ymax") {
-                this.ymin = y;
-            } else if (y < this.ymin) {
+            } else if (y > this._ymin && y < this._ymax && this.creatingAnchorY == "ymin") {
+                this._ymax = y;
+            } else if (y > this._ymin && y < this._ymax && this.creatingAnchorY == "ymax") {
+                this._ymin = y;
+            } else if (y < this._ymin) {
                 if (this.creatingAnchorY == "ymin") {
-                    this.ymax = this.ymin;
+                    this._ymax = this._ymin;
                 }
-                this.ymin = y;
+                this._ymin = y;
                 this.creatingAnchorY = "ymax";
             }
-
-            this.updateHandles();
+            this.applyUserScale();
+            // this.updateHandles();
             this.renderCallBack();
         }
     }
@@ -394,44 +426,45 @@ export default class Box {
         document.removeEventListener("pointerup", this.stopCreating);
 
         if (this.getArea() > 0) {
-            const canvasW = this.canvasXmax - this.canvasXmin;
-            const canvasH = this.canvasYmax - this.canvasYmin;
-            this.xmin = clamp(this.xmin, 0, canvasW - this.minSize);
-            this.ymin = clamp(this.ymin, 0, canvasH - this.minSize);
-            this.xmax = clamp(this.xmax, this.minSize, canvasW);
-            this.ymax = clamp(this.ymax, this.minSize, canvasH);
+            const canvasW = (this.canvasXmax - this.canvasXmin) / this.canvasWindow.scale;
+            const canvasH = (this.canvasYmax - this.canvasYmin) / this.canvasWindow.scale;
+            this._xmin = clamp(this._xmin, 0, canvasW - this.minSize);
+            this._ymin = clamp(this._ymin, 0, canvasH - this.minSize);
+            this._xmax = clamp(this._xmax, this.minSize, canvasW);
+            this._ymax = clamp(this._ymax, this.minSize, canvasH);
 
             if (this.minSize > 0) {
-                if (this.getWidth() < this.minSize) {
+                if (this.getWidth() / this.canvasWindow.scale < this.minSize) {
                     if (this.creatingAnchorX == "xmin") {
-                        this.xmax = this.xmin + this.minSize;
+                        this._xmax = this._xmin + this.minSize;
                     } else {
-                        this.xmin = this.xmax - this.minSize;
+                        this._xmin = this._xmax - this.minSize;
                     }
                 }
-                if (this.getHeight() < this.minSize) {
+                if (this.getHeight() / this.canvasWindow.scale < this.minSize) {
                     if (this.creatingAnchorY == "ymin") {
-                        this.ymax = this.ymin + this.minSize;
+                        this._ymax = this._ymin + this.minSize;
                     } else {
-                        this.ymin = this.ymax - this.minSize;
+                        this._ymin = this._ymax - this.minSize;
                     }
                 }
-                if (this.xmax > canvasW) {
-                    this.xmin -= this.xmax - canvasW;
-                    this.xmax = canvasW;
-                } else if (this.xmin < 0) {
-                    this.xmax -= this.xmin;
-                    this.xmin = 0;
+                if (this._xmax > canvasW) {
+                    this._xmin -= this._xmax - canvasW;
+                    this._xmax = canvasW;
+                } else if (this._xmin < 0) {
+                    this._xmax -= this._xmin;
+                    this._xmin = 0;
                 }
-                if (this.ymax > canvasH) {
-                    this.ymin -= this.ymax - canvasH;
-                    this.ymax = canvasH;
-                } else if (this.ymin < 0) {
-                    this.ymax -= this.ymin;
-                    this.ymin = 0;
+                if (this._ymax > canvasH) {
+                    this._ymin -= this._ymax - canvasH;
+                    this._ymax = canvasH;
+                } else if (this._ymin < 0) {
+                    this._ymax -= this._ymin;
+                    this._ymin = 0;
                 }
             }
-            this.updateHandles();
+            this.applyUserScale();
+            // this.updateHandles();
             this.renderCallBack();
         }
         this.onFinishCreation();
@@ -450,54 +483,56 @@ export default class Box {
         if (this.isResizing) {
             const mouseX = event.clientX;
             const mouseY = event.clientY;
-            const deltaX = mouseX - this.resizeHandles[this.resizingHandleIndex].xmin - this.offsetMouseX;
-            const deltaY = mouseY - this.resizeHandles[this.resizingHandleIndex].ymin - this.offsetMouseY;
-            const canvasW = this.canvasXmax - this.canvasXmin;
-            const canvasH = this.canvasYmax - this.canvasYmin;
+            const deltaX = (mouseX - this.offsetMouseX - this.resizeHandles[this.resizingHandleIndex].xmin) / this.canvasWindow.scale;
+            const deltaY = (mouseY - this.offsetMouseY - this.resizeHandles[this.resizingHandleIndex].ymin) / this.canvasWindow.scale;
+            const canvasW = (this.canvasXmax - this.canvasXmin) / this.canvasWindow.scale;
+            const canvasH = (this.canvasYmax - this.canvasYmin) / this.canvasWindow.scale;
             switch (this.resizingHandleIndex) {
                 case 0: // Top-left handle
-                    this.xmin += deltaX;
-                    this.ymin += deltaY;
-                    this.xmin = clamp(this.xmin, 0, this.xmax - this.minSize);
-                    this.ymin = clamp(this.ymin, 0, this.ymax - this.minSize);
+                    this._xmin += deltaX;
+                    this._ymin += deltaY;
+                    this._xmin = clamp(this._xmin, 0, this._xmax - this.minSize);
+                    this._ymin = clamp(this._ymin, 0, this._ymax - this.minSize);
                     break;
                 case 1: // Top-right handle
-                    this.xmax += deltaX;
-                    this.ymin += deltaY;
-                    this.xmax = clamp(this.xmax, this.xmin + this.minSize, canvasW);
-                    this.ymin = clamp(this.ymin, 0, this.ymax - this.minSize);
+                    this._xmax += deltaX;
+                    this._ymin += deltaY;
+                    this._xmax = clamp(this._xmax, this._xmin + this.minSize, canvasW);
+                    this._ymin = clamp(this._ymin, 0, this._ymax - this.minSize);
                     break;
                 case 2: // Bottom-right handle
-                    this.xmax += deltaX;
-                    this.ymax += deltaY;
-                    this.xmax = clamp(this.xmax, this.xmin + this.minSize, canvasW);
-                    this.ymax = clamp(this.ymax, this.ymin + this.minSize, canvasH);
+                    this._xmax += deltaX;
+                    this._ymax += deltaY;
+                    this._xmax = clamp(this._xmax, this._xmin + this.minSize, canvasW);
+                    this._ymax = clamp(this._ymax, this._ymin + this.minSize, canvasH);
                     break;
                 case 3: // Bottom-left handle
-                    this.xmin += deltaX;
-                    this.ymax += deltaY;
-                    this.xmin = clamp(this.xmin, 0, this.xmax - this.minSize);
-                    this.ymax = clamp(this.ymax, this.ymin + this.minSize, canvasH);
+                    this._xmin += deltaX;
+                    this._ymax += deltaY;
+                    this._xmin = clamp(this._xmin, 0, this._xmax - this.minSize);
+                    this._ymax = clamp(this._ymax, this._ymin + this.minSize, canvasH);
                     break;
                 case 4: // Top center handle
-                    this.ymin += deltaY;
-                    this.ymin = clamp(this.ymin, 0, this.ymax - this.minSize);
+                    this._ymin += deltaY;
+                    this._ymin = clamp(this._ymin, 0, this._ymax - this.minSize);
                     break;
                 case 5: // Right center handle
-                    this.xmax += deltaX;
-                    this.xmax = clamp(this.xmax, this.xmin + this.minSize, canvasW);
+                    this._xmax += deltaX;
+                    this._xmax = clamp(this._xmax, this._xmin + this.minSize, canvasW);
                     break;
                 case 6: // Bottom center handle
-                    this.ymax += deltaY;
-                    this.ymax = clamp(this.ymax, this.ymin + this.minSize, canvasH);
+                    this._ymax += deltaY;
+                    this._ymax = clamp(this._ymax, this._ymin + this.minSize, canvasH);
                     break;
                 case 7: // Left center handle
-                    this.xmin += deltaX;
-                    this.xmin = clamp(this.xmin, 0, this.xmax - this.minSize);
+                    this._xmin += deltaX;
+                    this._xmin = clamp(this._xmin, 0, this._xmax - this.minSize);
                     break;
             }
+
             // Update the resize handles
-            this.updateHandles();
+            this.applyUserScale();
+            // this.updateHandles();
             this.renderCallBack();
         }
     };
@@ -507,4 +542,23 @@ export default class Box {
         document.removeEventListener("pointermove", this.handleResize);
         document.removeEventListener("pointerup", this.stopResize);
     };
+
+    onRotate(op: number): void {
+        const [_xmin, _xmax, _ymin, _ymax] = [this._xmin, this._xmax, this._ymin, this._ymax];
+        switch (op) {
+            case 1:
+                this._xmin = this.canvasWindow.imageWidth - _ymax;
+                this._xmax = this.canvasWindow.imageWidth - _ymin;
+                this._ymin = _xmin;
+                this._ymax = _xmax;
+                break;
+            case -1:
+                this._xmin = _ymin;
+                this._xmax = _ymax;
+                this._ymin = this.canvasWindow.imageHeight - _xmax;
+                this._ymax = this.canvasWindow.imageHeight - _xmin;
+                break;
+        }
+        this.applyUserScale();
+    }
 }

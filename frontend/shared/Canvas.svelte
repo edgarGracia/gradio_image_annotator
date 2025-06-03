@@ -5,13 +5,15 @@
 	import Box from "./Box";
 	import { Colors } from './Colors.js';
 	import AnnotatedImageData from "./AnnotatedImageData";
+	import { Undo, Redo } from "@gradio/icons";
+	import WindowViewer from "./WindowViewer";
 
 	enum Mode {creation, drag}
 
     export let imageUrl: string | null = null;
 	export let interactive: boolean;
 	export let boxAlpha = 0.5;
-	export let boxMinSize = 25;
+	export let boxMinSize = 10;
 	export let handleSize: number;
 	export let boxThickness: number;
 	export let boxSelectedThickness: number;
@@ -35,6 +37,7 @@
     let image = null;
 	let selectedBox = -1;
 	let mode: Mode = Mode.drag;
+	let canvasWindow: WindowViewer = new WindowViewer(draw);
 
 	if (value !== null && value.boxes.length == 0) {
 		mode = Mode.creation;
@@ -82,9 +85,36 @@
     function draw() {
 		if (ctx) {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.save();
+			ctx.translate(canvasWindow.offsetX, canvasWindow.offsetY);
+			ctx.scale(canvasWindow.scale, canvasWindow.scale);
 			if (image !== null){
-				ctx.drawImage(image, canvasXmin, canvasYmin, imageWidth, imageHeight);
+				switch (value.orientation) {
+					case 0:
+						ctx.drawImage(image, 0, 0, imageWidth, imageHeight);
+						break;
+					case 1:
+						ctx.translate(imageWidth, 0);
+						ctx.rotate(Math.PI / 2);
+						ctx.drawImage(image, 0, 0, imageHeight, imageWidth);
+						break;
+					case 2:
+						ctx.translate(imageWidth, imageHeight);
+						ctx.rotate(Math.PI);
+						ctx.drawImage(image, 0, 0, imageWidth, imageHeight);
+						break;
+					case 3:
+						ctx.translate(0, imageHeight);
+						ctx.rotate(-Math.PI / 2);
+						ctx.drawImage(image, 0, 0, imageHeight, imageWidth);
+						break;
+				}
+
+
+				ctx.restore();
+				// ctx.resetTransform();
 			}
+			
 			for (const box of value.boxes.slice().reverse()) {
 				box.render(ctx);
 			}
@@ -123,11 +153,13 @@
 		const rect = canvas.getBoundingClientRect();
 		const mouseX = event.clientX - rect.left;
 		const mouseY = event.clientY - rect.top;
+		let selectedBoxFlag = false;
 
 		// Check if the mouse is over any of the resizing handles
 		for (const [i, box] of value.boxes.entries()) {
 			const handleIndex = box.indexOfPointInsideHandle(mouseX, mouseY);
 			if (handleIndex >= 0) {
+				selectedBoxFlag = true;
 				selectBox(i);
 				box.startResize(handleIndex, event);
 				return;
@@ -137,6 +169,7 @@
 		// Check if the mouse is inside a box
 		for (const [i, box] of value.boxes.entries()) {
 			if (box.isPointInsideBox(mouseX, mouseY)) {
+				selectedBoxFlag = true;
 				selectBox(i);
 				box.startDrag(event);
 				return;
@@ -145,6 +178,10 @@
 
 		if (!singleBox) {
 			selectBox(-1);
+		}
+
+		if (!selectedBoxFlag) {
+			canvasWindow.startDrag(event);
 		}
 	}
 
@@ -188,10 +225,30 @@
 		}
 	}
 
+	function handleMouseWheel(event: WheelEvent) {
+		event.preventDefault();
+		const delta = 1 / (1 + (event.deltaY / 1000) * 0.5);
+
+		const newScaleTmp = parseFloat((canvasWindow.scale * delta).toFixed(2));
+		const newScale = newScaleTmp < 1 ? 1 : newScaleTmp;
+		const rect = canvas.getBoundingClientRect();
+		const mouseX = event.clientX - rect.left;
+		const mouseY = event.clientY - rect.top;
+
+		const worldX = (mouseX - canvasWindow.offsetX) / canvasWindow.scale;
+		const worldY = (mouseY - canvasWindow.offsetY) / canvasWindow.scale;
+
+		canvasWindow.offsetX = mouseX - worldX * newScale;
+		canvasWindow.offsetY = mouseY - worldY * newScale;
+
+		canvasWindow.scale = newScale;
+		draw();
+	}
+
 	function createBox(event: PointerEvent) {
 		const rect = canvas.getBoundingClientRect();
-		const x = (event.clientX - rect.left - canvasXmin) / scaleFactor;
-		const y = (event.clientY - rect.top - canvasYmin) / scaleFactor;
+		const x = (event.clientX - rect.left - canvasWindow.offsetX) / scaleFactor / canvasWindow.scale;
+		const y = (event.clientY - rect.top - canvasWindow.offsetY) / scaleFactor / canvasWindow.scale;
 		let color;
 		if (choicesColors.length > 0) {
 			color = colorHexToRGB(choicesColors[0]);
@@ -208,6 +265,7 @@
 		let box = new Box(
 			draw,
 			onBoxFinishCreation,
+			canvasWindow,
 			canvasXmin,
 			canvasYmin,
 			canvasXmax,
@@ -356,31 +414,53 @@
 			dispatch("change");
 		}
 	}
+	
+	/**
+	 * Rotate the image and all the boxes
+	 * @param op 1: rotate clockwise, -1: rotate counterclockwise
+	 */
+	function onRotateImage(op: number) {
+		value.orientation = (((value.orientation + op) % 4) + 4 ) % 4;
+		canvasWindow.orientation = value.orientation;
+
+		resize();
+		for (const box of value.boxes) {
+			box.onRotate(op);
+		}
+		draw();
+	}
 
 	function resize() {
 		if (canvas) {
 			scaleFactor = 1;
 			canvas.width = canvas.clientWidth;
+
+			canvasWindow.setRotatedImage(image);
+			
 			if (image !== null) {
-				if (image.width > canvas.width) {
-					scaleFactor = canvas.width / image.width;
-					imageWidth = image.width * scaleFactor;
-					imageHeight = image.height * scaleFactor;
+				if (canvasWindow.imageRotatedWidth > canvas.width) {
+					scaleFactor = canvas.width / canvasWindow.imageRotatedWidth;
+					imageWidth = Math.round(canvasWindow.imageRotatedWidth * scaleFactor);
+					imageHeight = Math.round(canvasWindow.imageRotatedHeight * scaleFactor);
 					canvasXmin = 0;
 					canvasYmin = 0;
 					canvasXmax = imageWidth;
 					canvasYmax = imageHeight;
 					canvas.height = imageHeight;
 				} else {
-					imageWidth = image.width;
-					imageHeight = image.height;
+					imageWidth = canvasWindow.imageRotatedWidth;
+					imageHeight = canvasWindow.imageRotatedHeight;
 					var x = (canvas.width - imageWidth) / 2;
 					canvasXmin = x;
 					canvasYmin = 0;
 					canvasXmax = x + imageWidth;
-					canvasYmax = image.height;
+					canvasYmax = imageHeight;
 					canvas.height = imageHeight;
 				}
+
+				canvasWindow.imageWidth = imageWidth;
+				canvasWindow.imageHeight = imageHeight;
+
 			} else {
 				canvasXmin = 0;
 				canvasYmin = 0;
@@ -388,6 +468,9 @@
 				canvasYmax = canvas.height;
 				canvas.height = canvas.clientHeight;
 			}
+			
+			canvasWindow.resize(canvas.width, canvas.height, canvasXmin, canvasYmin);
+
 			if (canvasXmax > 0 && canvasYmax > 0){
 				for (const box of value.boxes) {
 					box.canvasXmin = canvasXmin;
@@ -423,6 +506,7 @@
 				box = new Box(
 					draw,
 					onBoxFinishCreation,
+					canvasWindow,
 					canvasXmin,
 					canvasYmin,
 					canvasXmax,
@@ -514,6 +598,7 @@
 		on:pointerup={handlePointerUp}
 		on:pointermove={handlesCursor ? handlePointerMove : null}
 		on:dblclick={handleDoubleClick}
+		on:wheel={handleMouseWheel}
 		style="height: {height}; width: {width};"
 		class="canvas-annotator"
 	></canvas>
@@ -547,6 +632,16 @@
 				on:click={() => editDefaultLabelVisible = true}><Label/></button
 			>
 		{/if}
+		<button
+			class="icon"
+			aria-label="Rotate counterclockwise"
+			on:click={() => onRotateImage(-1)}><Undo/></button
+		>
+		<button
+			class="icon"
+			aria-label="Rotate clockwise"
+			on:click={() => onRotateImage(1)}><Redo/></button
+		>
 	</span>
 {/if}
 
