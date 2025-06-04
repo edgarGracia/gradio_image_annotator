@@ -530,6 +530,7 @@
 
 	$: {
 		value;
+		canvasWindow.orientation = value.orientation;
 		setImage();
 		parseInputBoxes();
 		resize();
