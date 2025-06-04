@@ -8744,7 +8744,7 @@ function wg(i, e, t) {
     "imageUrl" in B && t(31, l = B.imageUrl), "interactive" in B && t(2, s = B.interactive), "boxAlpha" in B && t(32, o = B.boxAlpha), "boxMinSize" in B && t(33, r = B.boxMinSize), "handleSize" in B && t(34, a = B.handleSize), "boxThickness" in B && t(35, f = B.boxThickness), "boxSelectedThickness" in B && t(36, c = B.boxSelectedThickness), "value" in B && t(0, u = B.value), "choices" in B && t(3, _ = B.choices), "choicesColors" in B && t(4, d = B.choicesColors), "disableEditBoxes" in B && t(5, m = B.disableEditBoxes), "height" in B && t(6, h = B.height), "width" in B && t(7, g = B.width), "singleBox" in B && t(37, v = B.singleBox), "showRemoveButton" in B && t(1, w = B.showRemoveButton), "handlesCursor" in B && t(8, b = B.handlesCursor), "useDefaultLabel" in B && t(38, k = B.useDefaultLabel);
   }, i.$$.update = () => {
     i.$$.dirty[0] & /*value*/
-    1 && (Wt(), vl(), Ae(), O());
+    1 && (S.orientation = u.orientation, Wt(), vl(), Ae(), O());
   }, [
     u,
     w,
