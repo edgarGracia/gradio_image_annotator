@@ -226,6 +226,10 @@
 	}
 
 	function handleMouseWheel(event: WheelEvent) {
+		if (!interactive) {
+			return;
+		}
+
 		event.preventDefault();
 		const delta = 1 / (1 + (event.deltaY / 1000) * 0.5);
 

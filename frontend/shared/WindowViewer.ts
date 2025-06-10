@@ -50,6 +50,13 @@ export default class WindowViewer {
     handleDrag = (event: MouseEvent): void => {
         if (this.isDragging) {
 
+            if (this.scale == 1.0){
+                this.offsetX = (this.canvasWidth - this.imageWidth) / 2;
+                this.offsetY = 0;
+                this.renderCallBack();
+                return;
+            }
+
             let deltaX = event.clientX - this.startDragX - this.offsetX;
             let deltaY = event.clientY - this.startDragY - this.offsetY;
 
