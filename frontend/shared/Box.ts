@@ -55,11 +55,13 @@ export default class Box {
         cursor: string;
     }[];
     canvasWindow: WindowViewer;
+    pointersCache: Map<number, PointerEvent>;
 
     constructor(
         renderCallBack: () => void,
         onFinishCreation: () => void,
         canvasWindow: WindowViewer,
+        pointersCache: Map<number, PointerEvent>,
         canvasXmin: number,
         canvasYmin: number,
         canvasXmax: number,
@@ -80,6 +82,7 @@ export default class Box {
         this.renderCallBack = renderCallBack;
         this.onFinishCreation = onFinishCreation;
         this.canvasWindow = canvasWindow;
+        this.pointersCache = pointersCache;
         this.canvasXmin = canvasXmin;
         this.canvasYmin = canvasYmin;
         this.canvasXmax = canvasXmax;
@@ -319,7 +322,7 @@ export default class Box {
     };
 
     handleDrag = (event: MouseEvent): void => {
-        if (this.isDragging) {
+        if (this.isDragging && this.pointersCache.size === 1) {
             let deltaX = (event.clientX - this.offsetMouseX) / this.canvasWindow.scale - this._xmin;
             let deltaY = (event.clientY - this.offsetMouseY) / this.canvasWindow.scale - this._ymin;
 
@@ -374,7 +377,7 @@ export default class Box {
     }
 
     handleCreating = (event: MouseEvent): void => {
-        if (this.isCreating) {
+        if (this.isCreating && this.pointersCache.size === 1) {
             let [x, y] = this.toBoxCoordinates(event.clientX, event.clientY);
             x = (x - this.offsetMouseX) / this.canvasWindow.scale;
             y = (y - this.offsetMouseY) / this.canvasWindow.scale;
@@ -480,7 +483,7 @@ export default class Box {
     }
 
     handleResize = (event: MouseEvent): void => {
-        if (this.isResizing) {
+        if (this.isResizing && this.pointersCache.size === 1) {
             const mouseX = event.clientX;
             const mouseY = event.clientY;
             const deltaX = (mouseX - this.offsetMouseX - this.resizeHandles[this.resizingHandleIndex].xmin) / this.canvasWindow.scale;

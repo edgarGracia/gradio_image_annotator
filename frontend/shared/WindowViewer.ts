@@ -15,9 +15,14 @@ export default class WindowViewer {
     startDragY: number;
     orientation: number;
     renderCallBack: () => void;
+    pointersCache: Map<number, PointerEvent>;
 
-    constructor(renderCallBack: () => void) {
+    constructor(
+        renderCallBack: () => void,
+        pointersCache: Map<number, PointerEvent>,
+    ) {
         this.renderCallBack = renderCallBack;
+        this.pointersCache = pointersCache;
         this.scale = 1.0;
         this.offsetX = 0;
         this.offsetY = 0;
@@ -34,24 +39,37 @@ export default class WindowViewer {
     }
     startDrag(event: MouseEvent): void {
         this.isDragging = true;
-        this.startDragX = event.clientX - this.offsetX;
-        this.startDragY = event.clientY - this.offsetY;
+        this.startDragX = event.clientX;
+        this.startDragY = event.clientY;
 
         document.addEventListener("pointermove", this.handleDrag);
         document.addEventListener("pointerup", this.stopDrag);
     }
 
     stopDrag = (): void => {
-        this.isDragging = false;
-        document.removeEventListener("pointermove", this.handleDrag);
-        document.removeEventListener("pointerup", this.stopDrag);
+        if (this.pointersCache.size === 0) {
+            this.isDragging = false;
+            document.removeEventListener("pointermove", this.handleDrag);
+            document.removeEventListener("pointerup", this.stopDrag);
+        } else if (this.pointersCache.size === 1) {
+            this.isDragging = true;
+            this.startDragX = this.pointersCache.values().next().value.clientX;
+            this.startDragY = this.pointersCache.values().next().value.clientY;
+        }
     };
 
     handleDrag = (event: MouseEvent): void => {
-        if (this.isDragging) {
+        if (this.isDragging && this.pointersCache.size === 1) {
 
-            let deltaX = event.clientX - this.startDragX - this.offsetX;
-            let deltaY = event.clientY - this.startDragY - this.offsetY;
+            if (this.scale == 1.0){
+                this.offsetX = (this.canvasWidth - this.imageWidth) / 2;
+                this.offsetY = 0;
+                this.renderCallBack();
+                return;
+            }
+
+            let deltaX = event.clientX - this.startDragX;
+            let deltaY = event.clientY - this.startDragY;
 
             if (this.imageWidth * this.scale > this.canvasWidth){
                 deltaX = clamp(deltaX, this.canvasWidth-this.offsetX-(this.imageWidth*this.scale), -this.offsetX);
@@ -67,6 +85,8 @@ export default class WindowViewer {
 
             this.offsetX += deltaX;
             this.offsetY += deltaY;
+            this.startDragX = event.clientX;
+            this.startDragY = event.clientY;
             this.renderCallBack();
         }
     };

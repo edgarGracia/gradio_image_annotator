@@ -37,7 +37,8 @@
     let image = null;
 	let selectedBox = -1;
 	let mode: Mode = Mode.drag;
-	let canvasWindow: WindowViewer = new WindowViewer(draw);
+	let pointersCache: Map<number, PointerEvent> = new Map();
+	let canvasWindow: WindowViewer = new WindowViewer(draw, pointersCache);
 
 	if (value !== null && value.boxes.length == 0) {
 		mode = Mode.creation;
@@ -61,6 +62,12 @@
 		label: "",
 		color: ""
 	};
+
+	let touchScaleValues = {
+		x: 0,
+		y: 0,
+		distance: 0,
+	}
 
 	const dispatch = createEventDispatcher<{
 		change: undefined;
@@ -130,23 +137,45 @@
 		draw();
 	}
 
+	const getDistance = (touch1: PointerEvent, touch2: PointerEvent) => {
+		return Math.sqrt(
+			Math.pow(touch1.clientX - touch2.clientX, 2) +
+			Math.pow(touch1.clientY - touch2.clientY, 2)
+		);
+	};
+
 	function handlePointerDown(event: PointerEvent) {
 		if (!interactive) {
 			return;
 		}
+		canvas.setPointerCapture(event.pointerId);
+		pointersCache.set(event.pointerId, event);
 
-		if (
-			event.target instanceof Element &&
-			event.target.hasPointerCapture(event.pointerId)
-		) {
-			event.target.releasePointerCapture(event.pointerId);
+		if (pointersCache.size == 1) {
+			if (mode === Mode.creation) {
+				createBox(event);
+			} else if (mode === Mode.drag) {
+				clickBox(event);
+			}
+		} else if (pointersCache.size == 2) {
+			canvasWindow.isDragging = false;
+			value.boxes.forEach(box => {
+				box.isCreating = false;
+				box.isDragging = false;
+				box.isResizing = false;
+			});
+			const pointerArray = Array.from(pointersCache.values());
+			const touch1 = pointerArray[0];
+			const touch2 = pointerArray[1];
+			const distance = getDistance(touch1, touch2);
+			const centerX = (touch1.clientX + touch2.clientX) / 2;
+			const centerY = (touch1.clientY + touch2.clientY) / 2;
+
+			touchScaleValues.distance = distance;
+			touchScaleValues.x = centerX;
+			touchScaleValues.y = centerY;
 		}
 
-		if (mode === Mode.creation) {
-			createBox(event);
-		} else if (mode === Mode.drag) {
-			clickBox(event);
-		}
 	}
 
 	function clickBox(event: PointerEvent) {
@@ -186,31 +215,91 @@
 	}
 
 	function handlePointerUp(event: PointerEvent) {
+		if (!interactive) {
+			return;
+		}
+		pointersCache.delete(event.pointerId);
+		canvas.releasePointerCapture(event.pointerId);
+		dispatch("change");
+	}
+
+	function handlePointerCancel(event: PointerEvent) {
+		if (!interactive) {
+			return;
+		}
+		pointersCache.delete(event.pointerId);
+		canvas.releasePointerCapture(event.pointerId);
 		dispatch("change");
 	}
 
 	function handlePointerMove(event: PointerEvent) {
-		if (value === null) {
+		if (!interactive) {
 			return;
 		}
 
-		if (mode !== Mode.drag) {
-			return;
-		}
-
-		const rect = canvas.getBoundingClientRect();
-		const mouseX = event.clientX - rect.left;
-		const mouseY = event.clientY - rect.top;
-
-		for (const [_, box] of value.boxes.entries()) {
-			const handleIndex = box.indexOfPointInsideHandle(mouseX, mouseY);
-			if (handleIndex >= 0) {
-				canvas.style.cursor = box.resizeHandles[handleIndex].cursor;
+		if (event.pointerType === "mouse") {
+			if (!handlesCursor) {
 				return;
 			}
-		}
 
-		canvas.style.cursor = "default";
+			if (value === null) {
+				return;
+			}
+
+			if (mode !== Mode.drag) {
+				return;
+			}
+
+			const rect = canvas.getBoundingClientRect();
+			const mouseX = event.clientX - rect.left;
+			const mouseY = event.clientY - rect.top;
+
+			for (const [_, box] of value.boxes.entries()) {
+				const handleIndex = box.indexOfPointInsideHandle(mouseX, mouseY);
+				if (handleIndex >= 0) {
+					canvas.style.cursor = box.resizeHandles[handleIndex].cursor;
+					return;
+				}
+			}
+
+			canvas.style.cursor = "default";
+
+		} else { // touch
+			if (!pointersCache.has(event.pointerId)) {
+				return;
+			}
+			pointersCache.set(event.pointerId, event);
+
+			if (pointersCache.size === 2) {
+				const pointerArray = Array.from(pointersCache.values());
+				const touch1 = pointerArray[0];
+				const touch2 = pointerArray[1];
+				const distance = getDistance(touch1, touch2);
+				const centerX = (touch1.clientX + touch2.clientX) / 2;
+				const centerY = (touch1.clientY + touch2.clientY) / 2;
+
+				const newScaleTmp = parseFloat(
+					(canvasWindow.scale * (distance / touchScaleValues.distance)).toFixed(2)
+				);
+				const newScale = newScaleTmp < 1 ? 1 : newScaleTmp;
+
+				const scaleDelta = newScale / canvasWindow.scale;
+				canvasWindow.offsetX = touchScaleValues.x - (touchScaleValues.x - canvasWindow.offsetX) * scaleDelta;
+				canvasWindow.offsetY = touchScaleValues.y - (touchScaleValues.y - canvasWindow.offsetY) * scaleDelta;
+
+				const dx = centerX - touchScaleValues.x;
+                const dy = centerY - touchScaleValues.y;
+				canvasWindow.offsetX += dx;
+				canvasWindow.offsetY += dy;
+				canvasWindow.scale = newScale;
+
+				touchScaleValues.x = centerX;
+				touchScaleValues.y = centerY;
+				touchScaleValues.distance = distance;
+
+				draw();
+			}
+		}
 	}
 
 	function handleKeyPress(event: KeyboardEvent) {
@@ -226,6 +315,10 @@
 	}
 
 	function handleMouseWheel(event: WheelEvent) {
+		if (!interactive) {
+			return;
+		}
+
 		event.preventDefault();
 		const delta = 1 / (1 + (event.deltaY / 1000) * 0.5);
 
@@ -266,6 +359,7 @@
 			draw,
 			onBoxFinishCreation,
 			canvasWindow,
+			pointersCache,
 			canvasXmin,
 			canvasYmin,
 			canvasXmax,
@@ -507,6 +601,7 @@
 					draw,
 					onBoxFinishCreation,
 					canvasWindow,
+					pointersCache,
 					canvasXmin,
 					canvasYmin,
 					canvasXmax,
@@ -597,7 +692,8 @@
 		bind:this={canvas}
 		on:pointerdown={handlePointerDown}
 		on:pointerup={handlePointerUp}
-		on:pointermove={handlesCursor ? handlePointerMove : null}
+		on:pointermove={handlePointerMove}
+		on:pointercancel={handlePointerCancel}
 		on:dblclick={handleDoubleClick}
 		on:wheel={handleMouseWheel}
 		style="height: {height}; width: {width};"
