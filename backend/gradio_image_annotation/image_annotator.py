@@ -88,7 +88,7 @@ class image_annotator(Component):
         show_clear_button: bool | None = True,
         show_remove_button: bool | None = None,
         handles_cursor: bool | None = True,
-        use_default_label: bool = False,
+        use_default_label: bool | None = False,
     ):
         """
         Parameters:
