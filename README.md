@@ -535,7 +535,7 @@ bool | None
 <td align="left" style="width: 25%;">
 
 ```python
-bool
+bool | None
 ```
 
 </td>
