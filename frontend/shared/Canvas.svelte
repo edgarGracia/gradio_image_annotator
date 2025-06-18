@@ -68,6 +68,7 @@
 		y: 0,
 		distance: 0,
 	}
+	const touchScaleDeadzone = 100;
 
 	const dispatch = createEventDispatcher<{
 		change: undefined;
@@ -138,16 +139,19 @@
 	}
 
 	const getDistance = (touch1: PointerEvent, touch2: PointerEvent) => {
-		return Math.sqrt(
+		const distance = Math.sqrt(
 			Math.pow(touch1.clientX - touch2.clientX, 2) +
 			Math.pow(touch1.clientY - touch2.clientY, 2)
 		);
+		return distance < touchScaleDeadzone ? touchScaleDeadzone : distance;
 	};
 
 	function handlePointerDown(event: PointerEvent) {
 		if (!interactive) {
 			return;
 		}
+
+		event.preventDefault();
 		canvas.setPointerCapture(event.pointerId);
 		pointersCache.set(event.pointerId, event);
 
@@ -168,8 +172,9 @@
 			const touch1 = pointerArray[0];
 			const touch2 = pointerArray[1];
 			const distance = getDistance(touch1, touch2);
-			const centerX = (touch1.clientX + touch2.clientX) / 2;
-			const centerY = (touch1.clientY + touch2.clientY) / 2;
+			const rect = canvas.getBoundingClientRect();
+			const centerX = (touch1.clientX + touch2.clientX) / 2 - rect.left;
+			const centerY = (touch1.clientY + touch2.clientY) / 2 - rect.top;
 
 			touchScaleValues.distance = distance;
 			touchScaleValues.x = centerX;
@@ -237,6 +242,7 @@
 			return;
 		}
 
+		event.preventDefault();
 		if (event.pointerType === "mouse") {
 			if (!handlesCursor) {
 				return;
@@ -275,8 +281,9 @@
 				const touch1 = pointerArray[0];
 				const touch2 = pointerArray[1];
 				const distance = getDistance(touch1, touch2);
-				const centerX = (touch1.clientX + touch2.clientX) / 2;
-				const centerY = (touch1.clientY + touch2.clientY) / 2;
+				const rect = canvas.getBoundingClientRect();
+				const centerX = (touch1.clientX + touch2.clientX) / 2 - rect.left;
+				const centerY = (touch1.clientY + touch2.clientY) / 2 - rect.top;
 
 				const newScaleTmp = parseFloat(
 					(canvasWindow.scale * (distance / touchScaleValues.distance)).toFixed(2)
@@ -288,7 +295,7 @@
 				canvasWindow.offsetY = touchScaleValues.y - (touchScaleValues.y - canvasWindow.offsetY) * scaleDelta;
 
 				const dx = centerX - touchScaleValues.x;
-                const dy = centerY - touchScaleValues.y;
+				const dy = centerY - touchScaleValues.y;
 				canvasWindow.offsetX += dx;
 				canvasWindow.offsetY += dy;
 				canvasWindow.scale = newScale;
