@@ -3,7 +3,7 @@
     import { BaseButton } from "@gradio/button";
     import { BaseDropdown } from "./patched_dropdown/Index.svelte";
 	import { createEventDispatcher } from "svelte";
-    import { onMount, onDestroy } from "svelte";
+    import { onMount } from "svelte";
     import { Lock, Unlock } from "./icons/index";
 
     export let label = "";
@@ -59,9 +59,12 @@
     }
 
     function handleKeyPress(event: KeyboardEvent) {
-		switch (event.key) {
-			case "Enter":
+		switch (event.key.toLowerCase()) {
+			case "enter":
                 dispatchChange(1);
+				break;
+            case "escape":
+                dispatchChange(0);
 				break;
 		}
 	}
@@ -70,11 +73,11 @@
 		document.addEventListener("keydown", handleKeyPress);
         currentLabel = label;
         currentColor = color;
+
+        return () => {
+            document.removeEventListener("keydown", handleKeyPress);
+        };
 	});
-    
-	onDestroy(() => {
-        document.removeEventListener("keydown", handleKeyPress);
-  	});
 
 </script>
 

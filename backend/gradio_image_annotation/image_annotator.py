@@ -89,6 +89,7 @@ class image_annotator(Component):
         show_remove_button: bool | None = None,
         handles_cursor: bool | None = True,
         use_default_label: bool | None = False,
+        enable_keyboard_shortcuts: bool = True, 
     ):
         """
         Parameters:
@@ -123,6 +124,7 @@ class image_annotator(Component):
             show_remove_button: If True, will show a button to remove the selected bounding box.
             handles_cursor: If True, the cursor will change when hovering over box handles in drag mode. Can be CPU-intensive.
             use_default_label: If True, the first item in label_list will be used as the default label when creating boxes.
+            enable_keyboard_shortcuts: If True, the component will respond to keyboard events.
         """
 
         valid_types = ["numpy", "pil", "filepath"]
@@ -158,6 +160,7 @@ class image_annotator(Component):
         self.show_remove_button = show_remove_button
         self.handles_cursor = handles_cursor
         self.use_default_label = use_default_label
+        self.enable_keyboard_shortcuts = enable_keyboard_shortcuts
 
         self.boxes_alpha = boxes_alpha
         self.box_min_size = box_min_size

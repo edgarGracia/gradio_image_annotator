@@ -42,6 +42,7 @@
 	export let cli_upload: Client["upload"];
 	export let stream_handler: Client["stream_factory"];
 	export let useDefaultLabel: boolean;
+	export let enableKeyboardShortcuts: boolean;
 
 	let upload: Upload;
 	let uploading = false;
@@ -189,6 +190,7 @@
 					{handlesCursor}
 					{boxSelectedThickness}
 					{useDefaultLabel}
+					{enableKeyboardShortcuts}
 					src={value.image.url}
 				/>
 			</div>

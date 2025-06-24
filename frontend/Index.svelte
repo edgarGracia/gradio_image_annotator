@@ -50,6 +50,7 @@
 	export let show_remove_button: boolean;
 	export let handles_cursor: boolean;
 	export let use_default_label: boolean;
+	export let enable_keyboard_shortcuts: boolean;
 
 	export let gradio: Gradio<{
 		change: never;
@@ -129,6 +130,7 @@
 		showRemoveButton={show_remove_button}
 		handlesCursor={handles_cursor}
 		useDefaultLabel={use_default_label}
+		enableKeyboardShortcuts={enable_keyboard_shortcuts}
 	>
 		{#if active_source === "upload"}
 			<UploadText i18n={gradio.i18n} type="image" />

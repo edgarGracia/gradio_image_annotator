@@ -94,5 +94,16 @@ with gr.Blocks() as demo:
 
         gr.Examples(examples_crop, annotator_crop)
 
+    with gr.Accordion("Keyboard Shortcuts"):
+        gr.Markdown("""
+        - ``C``: Create mode
+        - ``D``: Drag mode
+        - ``E``: Edit selected box (same as double-click a box)
+        - ``Delete``: Remove selected box
+        - ``Space``: Reset view (zoom/pan)
+        - ``Enter``: Confirm modal dialog
+        - ``Escape``: Cancel/close modal dialog
+        """)
+
 if __name__ == "__main__":
     demo.launch()

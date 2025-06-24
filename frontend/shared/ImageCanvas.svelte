@@ -26,6 +26,7 @@
 	export let showRemoveButton: boolean;
 	export let handlesCursor: boolean;
 	export let useDefaultLabel: boolean;
+	export let enableKeyboardShortcuts: boolean;
 
 	let resolved_src: typeof src;
 
@@ -74,5 +75,6 @@
 	{showRemoveButton}
 	{handlesCursor}
 	{useDefaultLabel}
+	{enableKeyboardShortcuts}
 	imageUrl={resolved_src}
 />

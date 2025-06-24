@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount, onDestroy, createEventDispatcher } from "svelte";
+    import { onMount, createEventDispatcher } from "svelte";
 	import { BoundingBox, Hand, Trash, Label } from "./icons/index";
 	import ModalBox from "./ModalBox.svelte";
 	import Box from "./Box";
@@ -27,12 +27,14 @@
 	export let showRemoveButton: boolean = null;
 	export let handlesCursor: boolean = true;
 	export let useDefaultLabel: boolean = false;
+	export let enableKeyboardShortcuts: boolean = true;
 
 	if (showRemoveButton === null) {
 		showRemoveButton = (disableEditBoxes);
 	}
 
     let canvas: HTMLCanvasElement;
+	let annotatorContainerDiv: HTMLDivElement;
 	let ctx: CanvasRenderingContext2D;
     let image = null;
 	let selectedBox = -1;
@@ -309,16 +311,44 @@
 		}
 	}
 
+	function resetView() {
+		// Calculate minimum scale to fit image
+		const scaleX = canvas.width / imageWidth;
+		const scaleY = canvas.height / imageHeight;
+		const minScale = Math.min(scaleX, scaleY);
+				
+		// Set scale and center
+		canvasWindow.scale = minScale;
+		canvasWindow.offsetX = (canvas.width - imageWidth * minScale) / 2;
+		canvasWindow.offsetY = (canvas.height - imageHeight * minScale) / 2;
+		
+		draw();
+	}
+
 	function handleKeyPress(event: KeyboardEvent) {
-		if (!interactive) {
+		if (!enableKeyboardShortcuts || event.target !== annotatorContainerDiv || !interactive) {
 			return;
 		}
+		
+		const key = event.key.toLowerCase();
+		const blockedKeys = new Set(['delete', 'c', 'd', 'e', ' ']);
 
-		switch (event.key) {
-			case "Delete":
-				onDeleteBox();
-				break;
+		if (blockedKeys.has(key)) {
+			event.preventDefault();
+			event.stopPropagation();
 		}
+		
+		switch (key) {
+			case 'delete': onDeleteBox(); break;
+			case 'c': setCreateMode(); break;
+			case 'd': setDragMode(); break;
+			case 'e': onEditBox(); break;
+			case ' ': resetView(); break;
+		}
+	}
+
+	function focusAnnotator() {
+		setTimeout(() => {annotatorContainerDiv?.focus();}, 0);
 	}
 
 	function handleMouseWheel(event: WheelEvent) {
@@ -439,6 +469,7 @@
 
 	function onModalEditChange(event) {
 		editModalVisible = false;
+		focusAnnotator();
 		const { detail } = event;
 		let label = detail.label;
 		let color = detail.color;
@@ -458,6 +489,7 @@
 
 	function onModalNewChange(event) {
 		newModalVisible = false;
+		focusAnnotator();
 		const { detail } = event;
 		let label = detail.label;
 		let color = detail.color;
@@ -481,6 +513,7 @@
 
 	function onDefaultLabelEditChange(event) {
 		editDefaultLabelVisible = false;
+		focusAnnotator();
 		const { detail } = event;
 		let label = detail.label;
 		let color = detail.color;
@@ -670,84 +703,84 @@
 		if (selectedBox < 0 && value !== null && value.boxes.length > 0) {
 			selectBox(0);
 		}
+		
 		setImage();
 		resize();
 		draw();
 	});
-	
-	function handleCanvasFocus() {
-		document.addEventListener("keydown", handleKeyPress);
-	}
-	
-	function handleCanvasBlur() {
-		document.removeEventListener("keydown", handleKeyPress);
-	}
-
-	onDestroy(() => {
-		document.removeEventListener("keydown", handleKeyPress);
-  	});
 
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	class="canvas-container"
-	tabindex="-1"
-	on:focusin={handleCanvasFocus}
-	on:focusout={handleCanvasBlur}
+	class="annotator-container"
+	tabindex="0"
+	bind:this={annotatorContainerDiv}
+	on:keydown={handleKeyPress}
+	on:click={() => annotatorContainerDiv.focus()}
 >
-	<canvas
-		bind:this={canvas}
-		on:pointerdown={handlePointerDown}
-		on:pointerup={handlePointerUp}
-		on:pointermove={handlePointerMove}
-		on:pointercancel={handlePointerCancel}
-		on:dblclick={handleDoubleClick}
-		on:wheel={handleMouseWheel}
-		style="height: {height}; width: {width};"
-		class="canvas-annotator"
-	></canvas>
-</div>
+	<div class="canvas-container">
+		<canvas
+			bind:this={canvas}
+			on:pointerdown={handlePointerDown}
+			on:pointerup={handlePointerUp}
+			on:pointermove={handlePointerMove}
+			on:pointercancel={handlePointerCancel}
+			on:dblclick={handleDoubleClick}
+			on:wheel={handleMouseWheel}
+			style="height: {height}; width: {width};"
+			class="canvas-annotator"
+		></canvas>
+	</div>
 
-{#if interactive}
-	<span class="canvas-control">
-		<button
-			class="icon"
-			class:selected={mode === Mode.creation}
-			aria-label="Create box"
-			on:click={() => setCreateMode()}><BoundingBox/></button
-		>
-		<button
-			class="icon"
-			class:selected={mode === Mode.drag}
-			aria-label="Edit boxes"
-			on:click={() => setDragMode()}><Hand/></button
-		>
-		{#if showRemoveButton}
+	{#if interactive}
+		<span class="canvas-control">
 			<button
 				class="icon"
-				aria-label="Remove boxes"
-				on:click={() => onDeleteBox()}><Trash/></button
+				class:selected={mode === Mode.creation}
+				aria-label="Create box"
+				title="Create box (C)"
+				on:click={() => setCreateMode()}><BoundingBox/></button
 			>
-		{/if}
-		{#if !disableEditBoxes && labelDetailLock}
 			<button
 				class="icon"
-				aria-label="Edit label"
-				on:click={() => editDefaultLabelVisible = true}><Label/></button
+				class:selected={mode === Mode.drag}
+				aria-label="Drag boxes"
+				title="Drag boxes (D)"
+				on:click={() => setDragMode()}><Hand/></button
 			>
-		{/if}
-		<button
-			class="icon"
-			aria-label="Rotate counterclockwise"
-			on:click={() => onRotateImage(-1)}><Undo/></button
-		>
-		<button
-			class="icon"
-			aria-label="Rotate clockwise"
-			on:click={() => onRotateImage(1)}><Redo/></button
-		>
-	</span>
-{/if}
+			{#if showRemoveButton}
+				<button
+					class="icon"
+					aria-label="Remove box"
+					title="Remove box (Del)"
+					on:click={() => onDeleteBox()}><Trash/></button
+				>
+			{/if}
+			{#if !disableEditBoxes && labelDetailLock}
+				<button
+					class="icon"
+					aria-label="Edit label"
+					title="Edit label"
+					on:click={() => editDefaultLabelVisible = true}><Label/></button
+				>
+			{/if}
+			<button
+				class="icon"
+				aria-label="Rotate counterclockwise"
+				title="Rotate counterclockwise"
+				on:click={() => onRotateImage(-1)}><Undo/></button
+			>
+			<button
+				class="icon"
+				aria-label="Rotate clockwise"
+				title="Rotate clockwise"
+				on:click={() => onRotateImage(1)}><Redo/></button
+			>
+		</span>
+	{/if}
+</div>
 
 {#if editModalVisible}
 	<ModalBox

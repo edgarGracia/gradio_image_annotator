@@ -6,6 +6,15 @@ A Gradio component that can be used to annotate images with bounding boxes.
 
 ![Demo preview](images/demo.png)
 
+## Keyboard Shortcuts:
+- `C`: Create mode
+- `D`: Drag mode
+- `E`: Edit selected box (same as double-click a box)
+- `Delete`: Remove selected box
+- `Space`: Reset view (zoom/pan)
+- `Enter`: Confirm modal dialog
+- `Escape`: Cancel/close modal dialog
+
 ## Installation
 
 ```bash
@@ -110,6 +119,17 @@ with gr.Blocks() as demo:
         button_crop.click(crop, annotator_crop, image_crop)
 
         gr.Examples(examples_crop, annotator_crop)
+    
+    with gr.Accordion("Keyboard Shortcuts"):
+        gr.Markdown("""
+        - ``C``: Create mode
+        - ``D``: Drag mode
+        - ``E``: Edit selected box (same as double-click a box)
+        - ``Delete``: Remove selected box
+        - ``Space``: Reset view (zoom/pan)
+        - ``Enter``: Confirm modal dialog
+        - ``Escape``: Cancel/close modal dialog
+        """)
 
 if __name__ == "__main__":
     demo.launch()
@@ -541,6 +561,19 @@ bool | None
 </td>
 <td align="left"><code>False</code></td>
 <td align="left">If True, the first item in label_list will be used as the default label when creating boxes.</td>
+</tr>
+
+<tr>
+<td align="left"><code>enable_keyboard_shortcuts</code></td>
+<td align="left" style="width: 25%;">
+
+```python
+bool
+```
+
+</td>
+<td align="left"><code>True</code></td>
+<td align="left">If True, the component will respond to keyboard events.</td>
 </tr>
 </tbody></table>
 
