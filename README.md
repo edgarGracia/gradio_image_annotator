@@ -583,7 +583,7 @@ bool
 | name | description |
 |:-----|:------------|
 | `clear` | This listener is triggered when the user clears the image_annotator using the clear button for the component. |
-| `change` | Triggered when the value of the image_annotator changes either because of user input (e.g. a user types in a textbox) OR because of a function update (e.g. an image receives a value from the output of an event trigger). See `.input()` for a listener that is only triggered by user input. |
+| `change` | Triggered when the value of the image_annotator changes either because of user input OR because of a function update.
 | `upload` | This listener is triggered when the user uploads a file into the image_annotator. |
 
 
