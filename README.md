@@ -168,11 +168,11 @@ dict | None
 <td align="left" style="width: 25%;">
 
 ```python
-float | None
+float
 ```
 
 </td>
-<td align="left"><code>None</code></td>
+<td align="left"><code>0.5</code></td>
 <td align="left">Opacity of the bounding boxes 0 and 1.</td>
 </tr>
 
@@ -181,11 +181,11 @@ float | None
 <td align="left" style="width: 25%;">
 
 ```python
-list[str] | None
+list[str]
 ```
 
 </td>
-<td align="left"><code>None</code></td>
+<td align="left"><code>[]</code></td>
 <td align="left">List of valid labels.</td>
 </tr>
 
@@ -194,11 +194,11 @@ list[str] | None
 <td align="left" style="width: 25%;">
 
 ```python
-list[str] | None
+list[str]
 ```
 
 </td>
-<td align="left"><code>None</code></td>
+<td align="left"><code>[]</code></td>
 <td align="left">Optional list of colors for each label when `label_list` is used. Colors must be a tuple of RGB values (e.g. `(255,255,255)`).</td>
 </tr>
 
@@ -207,11 +207,11 @@ list[str] | None
 <td align="left" style="width: 25%;">
 
 ```python
-int | None
+int
 ```
 
 </td>
-<td align="left"><code>None</code></td>
+<td align="left"><code>10</code></td>
 <td align="left">Minimum valid bounding box size.</td>
 </tr>
 
@@ -220,11 +220,11 @@ int | None
 <td align="left" style="width: 25%;">
 
 ```python
-int | None
+int
 ```
 
 </td>
-<td align="left"><code>None</code></td>
+<td align="left"><code>8</code></td>
 <td align="left">Size of the bounding box resize handles.</td>
 </tr>
 
@@ -233,11 +233,11 @@ int | None
 <td align="left" style="width: 25%;">
 
 ```python
-int | None
+int
 ```
 
 </td>
-<td align="left"><code>None</code></td>
+<td align="left"><code>2</code></td>
 <td align="left">Thickness of the bounding box outline.</td>
 </tr>
 
@@ -246,11 +246,11 @@ int | None
 <td align="left" style="width: 25%;">
 
 ```python
-int | None
+int
 ```
 
 </td>
-<td align="left"><code>None</code></td>
+<td align="left"><code>4</code></td>
 <td align="left">Thickness of the bounding box outline when it is selected.</td>
 </tr>
 
@@ -583,7 +583,7 @@ bool
 | name | description |
 |:-----|:------------|
 | `clear` | This listener is triggered when the user clears the image_annotator using the clear button for the component. |
-| `change` | Triggered when the value of the image_annotator changes either because of user input OR because of a function update.
+| `change` | Triggered when the value of the image_annotator changes either because of user input (e.g. a user types in a textbox) OR because of a function update (e.g. an image receives a value from the output of an event trigger). See `.input()` for a listener that is only triggered by user input. |
 | `upload` | This listener is triggered when the user uploads a file into the image_annotator. |
 
 

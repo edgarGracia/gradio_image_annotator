@@ -120,9 +120,7 @@
 						break;
 				}
 
-
 				ctx.restore();
-				// ctx.resetTransform();
 			}
 			
 			for (const box of value.boxes.slice().reverse()) {
@@ -182,7 +180,6 @@
 			touchScaleValues.x = centerX;
 			touchScaleValues.y = centerY;
 		}
-
 	}
 
 	function clickBox(event: PointerEvent) {
