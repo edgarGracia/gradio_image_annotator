@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { afterUpdate, createEventDispatcher } from "svelte";
-	import { _, number } from "svelte-i18n";
 	import { BlockTitle } from "@gradio/atoms";
 	import { Remove, DropdownArrow } from "@gradio/icons";
 	import type { KeyUpData, SelectData, I18nFormatter } from "@gradio/utils";

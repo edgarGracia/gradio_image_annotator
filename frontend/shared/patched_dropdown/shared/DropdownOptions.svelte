@@ -72,7 +72,7 @@
 
 <svelte:window on:scroll={scroll_listener} bind:innerHeight />
 
-<div class="reference" bind:this={refElement} />
+<div class="reference" bind:this={refElement}></div>
 {#if show_options && !disabled}
 	<ul
 		class="options"
