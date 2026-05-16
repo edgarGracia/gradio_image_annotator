@@ -108,7 +108,7 @@
 
 <div class="icon-buttons">
 	{#if showDownloadButton && value != null}
-		<DownloadLink href={value.image.url} download={value.image.orig_name || "image"}>
+		<DownloadLink href={value.image.url} download={value.image.orig_name || "image"} target="_blank">
 			<IconButton Icon={Download} label={i18n("common.download")} />
 		</DownloadLink>
 	{/if}
@@ -130,7 +130,7 @@
 			<IconButton
 				Icon={Clear}
 				label="Remove Image"
-				on:click={clear}
+				onclick={clear}
 			/>
 		</div>
 	{/if}

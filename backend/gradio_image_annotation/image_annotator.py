@@ -277,7 +277,7 @@ class image_annotator(Component):
         }
         return ret_value
 
-    def postprocess(self, value: AnnotatedImageValue | None) -> AnnotatedImageData | None:
+    def postprocess(self, value: dict | None) -> AnnotatedImageData | None:
         """
         Parameters:
             value: A dict with an image and an optional list of boxes or None.
