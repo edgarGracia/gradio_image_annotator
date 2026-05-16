@@ -107,25 +107,25 @@
 <BlockLabel {show_label} Icon={ImageIcon} label={label || "Image Annotator"} />
 
 <div class="icon-buttons">
-	{#if showDownloadButton && value !== null}
+	{#if showDownloadButton && value != null}
 		<DownloadLink href={value.image.url} download={value.image.orig_name || "image"}>
 			<IconButton Icon={Download} label={i18n("common.download")} />
 		</DownloadLink>
 	{/if}
-	{#if showShareButton && value !== null}
+	{#if showShareButton && value != null}
 		<ShareButton
 			{i18n}
 			on:share
 			on:error
 			formatter={async (value) => {
-				if (value === null) return "";
+				if (value == null) return "";
 				let url = await uploadToHuggingFace(value.image, "base64");
 				return `<img src="${url}" />`;
 			}}
 			{value}
 		/>
 	{/if}
-	{#if showClearButton && value !== null && interactive}
+	{#if showClearButton && value != null && interactive}
 		<div>
 			<IconButton
 				Icon={Clear}
@@ -139,7 +139,7 @@
 <div data-testid="image" class="image-container">
 	<div class="upload-container">
 		<Upload
-			hidden={value !== null || active_source === "webcam"}
+			hidden={value != null || active_source === "webcam"}
 			bind:this={upload}
 			bind:uploading
 			bind:dragging
@@ -152,11 +152,11 @@
 			upload={cli_upload}
 			{stream_handler}
 		>
-			{#if value === null}
+			{#if value == null}
 				<slot />
 			{/if}
 		</Upload>
-		{#if value === null && active_source === "webcam"}
+		{#if value == null && active_source === "webcam"}
 			<Webcam
 				{root}
 				on:capture={(e) => handle_save(e.detail)}
@@ -170,7 +170,7 @@
 				{upload}
 			/>
 		{/if}
-		{#if value !== null}
+		{#if value != null}
 			<div class:selectable class="image-frame">
 				<ImageCanvas
 					bind:value
@@ -196,7 +196,7 @@
 			</div>
 		{/if}
 	</div>
-	{#if (sources.length > 1 || sources.includes("clipboard")) && value === null && interactive}
+	{#if (sources.length > 1 || sources.includes("clipboard")) && value == null && interactive}
 		<SelectSource
 			{sources}
 			bind:active_source
