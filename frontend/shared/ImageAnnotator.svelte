@@ -48,7 +48,7 @@
 	let uploading = false;
 	export let active_source: source_type = null;
 
-	function handle_upload({ detail }: CustomEvent<FileData>): void {
+	function handle_upload(detail: FileData): void {
 		value = new AnnotatedImageData();
 		value.image = detail;
 		dispatch("upload");
@@ -144,8 +144,8 @@
 			bind:uploading
 			bind:dragging
 			filetype={active_source === "clipboard" ? "clipboard" : "image/*"}
-			on:load={handle_upload}
-			on:error
+			onload={handle_upload}
+			onerror={(msg) => dispatch("error", msg)}
 			{root}
 			{max_file_size}
 			disable_click={!sources.includes("upload")}
