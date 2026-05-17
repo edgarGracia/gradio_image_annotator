@@ -3,15 +3,13 @@
 </script>
 
 <script lang="ts">
-	import { tick } from "svelte";
 	import { Gradio } from "@gradio/utils";
 	import { Block, Empty, UploadText } from "@gradio/atoms";
 	import { Image } from "@gradio/icons";
 	import { StatusTracker } from "@gradio/statustracker";
-	import type { LoadingStatus } from "@gradio/statustracker";
 	import AnnotatedImageData from "./shared/AnnotatedImageData";
 	import ImageAnnotator from "./shared/ImageAnnotator.svelte";
-	
+
 	type SelectData = any;
 	type ShareData = any;
 
@@ -27,25 +25,14 @@
 	};
 
 	type ImageAnnotatorProps = {
-		elem_id: string;
-		elem_classes: string[];
-		visible: boolean;
 		value: null | AnnotatedImageData;
-		label: string;
-		show_label: boolean;
-		root: string;
 		height: number | string | undefined;
 		width: number | string | undefined;
 		_selectable: boolean;
-		container: boolean;
-		scale: number | null;
-		min_width: number | undefined;
-		loading_status: LoadingStatus;
 		sources: ("upload" | "webcam" | "clipboard")[];
 		show_download_button: boolean;
 		show_share_button: boolean;
 		show_clear_button: boolean;
-		interactive: boolean;
 		boxes_alpha: number;
 		label_list: string[];
 		label_colors: string[];
@@ -67,22 +54,22 @@
 		}
 	}
 
-	const props = $props<ImageAnnotatorProps & {
-		autoscroll?: boolean;
-		i18n?: any;
-		max_file_size?: number;
-		client?: any;
-	}>();
-
+	const props = $props();
 	const gradio = new ImageAnnotatorGradio(props);
 
 	let dragging = $state(false);
 	let active_source = $state<"upload" | "webcam" | "clipboard" | null>(
 		gradio.props.sources ? gradio.props.sources[0] : null
 	);
-	let old_value = $state(gradio.props.value);
+	let old_value = gradio.props.value;
+	let mounted = false;
 
 	$effect(() => {
+		if (!mounted) {
+			old_value = gradio.props.value;
+			mounted = true;
+			return;
+		}
 		if (old_value !== gradio.props.value) {
 			old_value = gradio.props.value;
 			gradio.dispatch("change");

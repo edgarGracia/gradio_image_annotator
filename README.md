@@ -119,7 +119,7 @@ with gr.Blocks() as demo:
         button_crop.click(crop, annotator_crop, image_crop)
 
         gr.Examples(examples_crop, annotator_crop)
-    
+
     with gr.Accordion("Keyboard Shortcuts"):
         gr.Markdown("""
         - ``C``: Create mode
@@ -603,7 +603,7 @@ The code snippet below is accurate in cases where the component is used as both 
  ```python
  def predict(
      value: AnnotatedImageValue | None
- ) -> AnnotatedImageValue | None:
+ ) -> dict | None:
      return value
  ```
  

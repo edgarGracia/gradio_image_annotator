@@ -15,14 +15,14 @@
     "@gradio/image": "0.25.1",
     "@gradio/statustracker": "0.12.2",
     "@gradio/upload": "0.17.4",
-    "@gradio/utils": "0.11.2",
+    "@gradio/utils": "0.12.2",
     "@gradio/wasm": "0.10.1",
     "cropperjs": "^2.0.1",
     "lazy-brush": "^2.0.2",
     "resize-observer-polyfill": "^1.5.1"
   },
   "devDependencies": {
-    "@gradio/preview": "0.15.2"
+    "@gradio/preview": "0.16.2"
   },
   "main_changeset": true,
   "main": "./Index.svelte",
