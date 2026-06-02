@@ -30,7 +30,7 @@ import numpy as np
 
 
 example_annotation = {
-    "image": "https://gradio-builds.s3.amazonaws.com/demo-files/base.png",
+    "image": "https://raw.githubusercontent.com/edgarGracia/gradio_image_annotator/refs/heads/main/demo/images/base.png",
     "boxes": [
         {
             "xmin": 636,
@@ -65,7 +65,7 @@ examples_crop = [
         ],
     },
     {
-        "image": "https://gradio-builds.s3.amazonaws.com/demo-files/base.png",
+        "image": "https://raw.githubusercontent.com/edgarGracia/gradio_image_annotator/refs/heads/main/demo/images/base.png",
         "boxes": [
             {
                 "xmin": 636,

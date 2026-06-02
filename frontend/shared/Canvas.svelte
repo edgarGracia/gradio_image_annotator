@@ -374,8 +374,8 @@
 
 	function createBox(event: PointerEvent) {
 		const rect = canvas.getBoundingClientRect();
-		const x = (event.clientX - rect.left - canvasWindow.offsetX) / scaleFactor / canvasWindow.scale;
-		const y = (event.clientY - rect.top - canvasWindow.offsetY) / scaleFactor / canvasWindow.scale;
+		const x = (event.clientX - rect.left - canvasWindow.offsetX) / canvasWindow.scale;
+		const y = (event.clientY - rect.top - canvasWindow.offsetY) / canvasWindow.scale;
 		let color;
 		if (choicesColors.length > 0) {
 			color = colorHexToRGB(choicesColors[0]);
