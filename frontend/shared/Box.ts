@@ -131,12 +131,37 @@ export default class Box {
         this.isSelected = selected;
     }
 
+    /** Point the box at a new canvas instance.
+     *
+     * Boxes live in the component value, which outlives the component itself:
+     * Gradio can rebuild the canvas and leave the existing boxes in place. The
+     * callbacks, viewer and pointer cache they captured then belong to a dead
+     * instance, so pointer state never reaches them and they stop responding.
+     *
+     * Args:
+     *     renderCallBack: Redraw of the live canvas.
+     *     onFinishCreation: Called when the box finishes being created.
+     *     canvasWindow: Viewer of the live canvas.
+     *     pointersCache: Pointer cache the live canvas writes to.
+     */
+    attach(
+        renderCallBack: () => void,
+        onFinishCreation: () => void,
+        canvasWindow: WindowViewer,
+        pointersCache: Map<number, PointerEvent>,
+    ): void {
+        this.renderCallBack = renderCallBack;
+        this.onFinishCreation = onFinishCreation;
+        this.canvasWindow = canvasWindow;
+        this.pointersCache = pointersCache;
+    }
+
     setScaleFactor(scaleFactor: number) {
         let scale = scaleFactor / this.scaleFactor;
-        this._xmin = Math.round(this._xmin * scale);
-        this._ymin = Math.round(this._ymin * scale);
-        this._xmax = Math.round(this._xmax * scale);
-        this._ymax = Math.round(this._ymax * scale);
+        this._xmin = this._xmin * scale;
+        this._ymin = this._ymin * scale;
+        this._xmax = this._xmax * scale;
+        this._ymax = this._ymax * scale;
         this.applyUserScale();
         // this.updateHandles();
         this.scaleFactor = scaleFactor;
@@ -309,8 +334,9 @@ export default class Box {
 
     startDrag(event: MouseEvent): void {
         this.isDragging = true;
-        this.offsetMouseX = event.clientX - this._xmin * this.canvasWindow.scale;
-        this.offsetMouseY = event.clientY - this._ymin * this.canvasWindow.scale;
+        const [pointerX, pointerY] = this.canvasWindow.toCanvasPoint(event.clientX, event.clientY);
+        this.offsetMouseX = pointerX - this._xmin * this.canvasWindow.scale;
+        this.offsetMouseY = pointerY - this._ymin * this.canvasWindow.scale;
         document.addEventListener("pointermove", this.handleDrag);
         document.addEventListener("pointerup", this.stopDrag);
     }
@@ -323,8 +349,9 @@ export default class Box {
 
     handleDrag = (event: MouseEvent): void => {
         if (this.isDragging && this.pointersCache.size === 1) {
-            let deltaX = (event.clientX - this.offsetMouseX) / this.canvasWindow.scale - this._xmin;
-            let deltaY = (event.clientY - this.offsetMouseY) / this.canvasWindow.scale - this._ymin;
+            const [pointerX, pointerY] = this.canvasWindow.toCanvasPoint(event.clientX, event.clientY);
+            let deltaX = (pointerX - this.offsetMouseX) / this.canvasWindow.scale - this._xmin;
+            let deltaY = (pointerY - this.offsetMouseY) / this.canvasWindow.scale - this._ymin;
 
             const canvasW = (this.canvasXmax - this.canvasXmin) / this.canvasWindow.scale;
             const canvasH = (this.canvasYmax - this.canvasYmin) / this.canvasWindow.scale;
@@ -368,19 +395,18 @@ export default class Box {
         return -1;
     }
 
-    startCreating(event: MouseEvent, canvasX: number, canvasY: number): void {
+    startCreating(): void {
         this.isCreating = true;
-        this.offsetMouseX = canvasX;
-        this.offsetMouseY = canvasY;
         document.addEventListener("pointermove", this.handleCreating);
         document.addEventListener("pointerup", this.stopCreating);
     }
 
     handleCreating = (event: MouseEvent): void => {
         if (this.isCreating && this.pointersCache.size === 1) {
-            let [x, y] = this.toBoxCoordinates(event.clientX, event.clientY);
-            x = (x - this.offsetMouseX) / this.canvasWindow.scale;
-            y = (y - this.offsetMouseY) / this.canvasWindow.scale;
+            const [pointerX, pointerY] = this.canvasWindow.toCanvasPoint(event.clientX, event.clientY);
+            let [x, y] = this.toBoxCoordinates(pointerX, pointerY);
+            x = x / this.canvasWindow.scale;
+            y = y / this.canvasWindow.scale;
 
             if (x > this._xmax) {
                 if (this.creatingAnchorX == "xmax") {
@@ -476,16 +502,16 @@ export default class Box {
     startResize(handleIndex: number, event: MouseEvent): void {
         this.resizingHandleIndex = handleIndex;
         this.isResizing = true;
-        this.offsetMouseX = event.clientX - this.resizeHandles[handleIndex].xmin;
-        this.offsetMouseY = event.clientY - this.resizeHandles[handleIndex].ymin;
+        const [pointerX, pointerY] = this.canvasWindow.toCanvasPoint(event.clientX, event.clientY);
+        this.offsetMouseX = pointerX - this.resizeHandles[handleIndex].xmin;
+        this.offsetMouseY = pointerY - this.resizeHandles[handleIndex].ymin;
         document.addEventListener("pointermove", this.handleResize);
         document.addEventListener("pointerup", this.stopResize);
     }
 
     handleResize = (event: MouseEvent): void => {
         if (this.isResizing && this.pointersCache.size === 1) {
-            const mouseX = event.clientX;
-            const mouseY = event.clientY;
+            const [mouseX, mouseY] = this.canvasWindow.toCanvasPoint(event.clientX, event.clientY);
             const deltaX = (mouseX - this.offsetMouseX - this.resizeHandles[this.resizingHandleIndex].xmin) / this.canvasWindow.scale;
             const deltaY = (mouseY - this.offsetMouseY - this.resizeHandles[this.resizingHandleIndex].ymin) / this.canvasWindow.scale;
             const canvasW = (this.canvasXmax - this.canvasXmin) / this.canvasWindow.scale;

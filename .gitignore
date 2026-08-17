@@ -10,3 +10,4 @@ __tmp/*
 .ruff_cache
 node_modules
 backend/**/templates/
+.gradio/

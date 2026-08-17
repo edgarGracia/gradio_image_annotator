@@ -34,13 +34,14 @@
 	}
 
     let canvas: HTMLCanvasElement;
+	let canvasContainerDiv: HTMLDivElement;
 	let annotatorContainerDiv: HTMLDivElement;
 	let ctx: CanvasRenderingContext2D;
     let image = null;
 	let selectedBox = -1;
 	let mode: Mode = Mode.drag;
 	let pointersCache: Map<number, PointerEvent> = new Map();
-	let canvasWindow: WindowViewer = new WindowViewer(draw, pointersCache);
+	let canvasWindow: WindowViewer = new WindowViewer(draw, pointersCache, () => canvas ?? null);
 
 	if (value !== null && value.boxes.length == 0) {
 		mode = Mode.creation;
@@ -93,7 +94,9 @@
 	}
 	
     function draw() {
-		if (ctx) {
+		// ctx outlives the element it came from: an image can finish loading
+		// after the canvas is gone (hidden tab, re-render), so check both.
+		if (ctx && canvas) {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.save();
 			ctx.translate(canvasWindow.offsetX, canvasWindow.offsetY);
@@ -172,9 +175,10 @@
 			const touch1 = pointerArray[0];
 			const touch2 = pointerArray[1];
 			const distance = getDistance(touch1, touch2);
-			const rect = canvas.getBoundingClientRect();
-			const centerX = (touch1.clientX + touch2.clientX) / 2 - rect.left;
-			const centerY = (touch1.clientY + touch2.clientY) / 2 - rect.top;
+			const [centerX, centerY] = canvasWindow.toCanvasPoint(
+				(touch1.clientX + touch2.clientX) / 2,
+				(touch1.clientY + touch2.clientY) / 2
+			);
 
 			touchScaleValues.distance = distance;
 			touchScaleValues.x = centerX;
@@ -183,9 +187,7 @@
 	}
 
 	function clickBox(event: PointerEvent) {
-		const rect = canvas.getBoundingClientRect();
-		const mouseX = event.clientX - rect.left;
-		const mouseY = event.clientY - rect.top;
+		const [mouseX, mouseY] = canvasWindow.toCanvasPoint(event.clientX, event.clientY);
 		let selectedBoxFlag = false;
 
 		// Check if the mouse is over any of the resizing handles
@@ -255,9 +257,7 @@
 				return;
 			}
 
-			const rect = canvas.getBoundingClientRect();
-			const mouseX = event.clientX - rect.left;
-			const mouseY = event.clientY - rect.top;
+			const [mouseX, mouseY] = canvasWindow.toCanvasPoint(event.clientX, event.clientY);
 
 			for (const [_, box] of value.boxes.entries()) {
 				const handleIndex = box.indexOfPointInsideHandle(mouseX, mouseY);
@@ -280,9 +280,10 @@
 				const touch1 = pointerArray[0];
 				const touch2 = pointerArray[1];
 				const distance = getDistance(touch1, touch2);
-				const rect = canvas.getBoundingClientRect();
-				const centerX = (touch1.clientX + touch2.clientX) / 2 - rect.left;
-				const centerY = (touch1.clientY + touch2.clientY) / 2 - rect.top;
+				const [centerX, centerY] = canvasWindow.toCanvasPoint(
+					(touch1.clientX + touch2.clientX) / 2,
+					(touch1.clientY + touch2.clientY) / 2
+				);
 
 				const newScaleTmp = parseFloat(
 					(canvasWindow.scale * (distance / touchScaleValues.distance)).toFixed(2)
@@ -358,9 +359,7 @@
 
 		const newScaleTmp = parseFloat((canvasWindow.scale * delta).toFixed(2));
 		const newScale = newScaleTmp < 1 ? 1 : newScaleTmp;
-		const rect = canvas.getBoundingClientRect();
-		const mouseX = event.clientX - rect.left;
-		const mouseY = event.clientY - rect.top;
+		const [mouseX, mouseY] = canvasWindow.toCanvasPoint(event.clientX, event.clientY);
 
 		const worldX = (mouseX - canvasWindow.offsetX) / canvasWindow.scale;
 		const worldY = (mouseY - canvasWindow.offsetY) / canvasWindow.scale;
@@ -373,9 +372,9 @@
 	}
 
 	function createBox(event: PointerEvent) {
-		const rect = canvas.getBoundingClientRect();
-		const x = (event.clientX - rect.left - canvasWindow.offsetX) / canvasWindow.scale;
-		const y = (event.clientY - rect.top - canvasWindow.offsetY) / canvasWindow.scale;
+		const [pointerX, pointerY] = canvasWindow.toCanvasPoint(event.clientX, event.clientY);
+		const x = (pointerX - canvasWindow.offsetX) / canvasWindow.scale;
+		const y = (pointerY - canvasWindow.offsetY) / canvasWindow.scale;
 		let color;
 		if (choicesColors.length > 0) {
 			color = colorHexToRGB(choicesColors[0]);
@@ -408,9 +407,10 @@
 			boxMinSize,
 			handleSize,
 			boxThickness,
-			boxSelectedThickness
+			boxSelectedThickness,
+			scaleFactor
 		);
-		box.startCreating(event, rect.left, rect.top);
+		box.startCreating();
 		if (singleBox) {
 			value.boxes = [box];
 		} else {
@@ -563,30 +563,38 @@
 
 	function resize() {
 		if (canvas) {
+			const canvasWidth = canvas.clientWidth;
+
+			// A hidden component (an inactive tab) measures 0 and would produce a
+			// zero scale factor, so keep the last valid layout instead
+			if (canvasWidth === 0) {
+				return;
+			}
+
 			scaleFactor = 1;
-			canvas.width = canvas.clientWidth;
+			let canvasHeight: number;
 
 			canvasWindow.setRotatedImage(image);
-			
+
 			if (image !== null) {
-				if (canvasWindow.imageRotatedWidth > canvas.width) {
-					scaleFactor = canvas.width / canvasWindow.imageRotatedWidth;
+				if (canvasWindow.imageRotatedWidth > canvasWidth) {
+					scaleFactor = canvasWidth / canvasWindow.imageRotatedWidth;
 					imageWidth = Math.round(canvasWindow.imageRotatedWidth * scaleFactor);
 					imageHeight = Math.round(canvasWindow.imageRotatedHeight * scaleFactor);
 					canvasXmin = 0;
 					canvasYmin = 0;
 					canvasXmax = imageWidth;
 					canvasYmax = imageHeight;
-					canvas.height = imageHeight;
+					canvasHeight = imageHeight;
 				} else {
 					imageWidth = canvasWindow.imageRotatedWidth;
 					imageHeight = canvasWindow.imageRotatedHeight;
-					var x = (canvas.width - imageWidth) / 2;
+					var x = (canvasWidth - imageWidth) / 2;
 					canvasXmin = x;
 					canvasYmin = 0;
 					canvasXmax = x + imageWidth;
 					canvasYmax = imageHeight;
-					canvas.height = imageHeight;
+					canvasHeight = imageHeight;
 				}
 
 				canvasWindow.imageWidth = imageWidth;
@@ -595,11 +603,20 @@
 			} else {
 				canvasXmin = 0;
 				canvasYmin = 0;
-				canvasXmax = canvas.width;
-				canvasYmax = canvas.height;
-				canvas.height = canvas.clientHeight;
+				canvasXmax = canvasWidth;
+				canvasYmax = canvas.clientHeight;
+				canvasHeight = canvas.clientHeight;
 			}
-			
+
+			// Assigning width/height clears the bitmap and forces a full redraw,
+			// so only touch them when the size actually changed
+			if (canvas.width !== canvasWidth) {
+				canvas.width = canvasWidth;
+			}
+			if (canvas.height !== canvasHeight) {
+				canvas.height = canvasHeight;
+			}
+
 			canvasWindow.resize(canvas.width, canvas.height, canvasXmin, canvasYmin);
 
 			if (canvasXmax > 0 && canvasYmax > 0){
@@ -612,15 +629,30 @@
 				}
 			}
 			draw();
-			dispatch("change");
 		}
 	}
-	const observer = new ResizeObserver(resize);
+	// Only the available width drives the layout. Ignoring height changes keeps
+	// the observer from reacting to the canvas growth it causes itself.
+	let lastObservedWidth = -1;
+	const observer = new ResizeObserver(() => {
+		const width = canvasContainerDiv ? canvasContainerDiv.clientWidth : 0;
+		if (width === lastObservedWidth) {
+			return;
+		}
+		lastObservedWidth = width;
+		resize();
+	});
 
 	function parseInputBoxes() {
 		for (let i = 0; i < value.boxes.length; i++) {
 			let box = value.boxes[i];
-			if (!(box instanceof Box)) {
+			if (box instanceof Box) {
+				// The value can outlive the canvas: rebind boxes kept from a
+				// previous instance, whose callbacks and pointer cache are dead.
+				if (box.pointersCache !== pointersCache) {
+					box.attach(draw, onBoxFinishCreation, canvasWindow, pointersCache);
+				}
+			} else {
 				let color = "";
 				let label = "";
 				if (box.hasOwnProperty("color")) {
@@ -633,6 +665,10 @@
 				}
 				if (box.hasOwnProperty("label")) {
 					label = box["label"];
+				}
+				let boxScaleFactor = 1;
+				if (box.hasOwnProperty("scaleFactor")) {
+					boxScaleFactor = box["scaleFactor"];
 				}
 				box = new Box(
 					draw,
@@ -653,7 +689,8 @@
 					boxMinSize,
 					handleSize,
 					boxThickness,
-					boxSelectedThickness
+					boxSelectedThickness,
+					boxScaleFactor
 				);
 				value.boxes[i] = box;
 			}
@@ -695,7 +732,9 @@
 		}
 
 		ctx = canvas.getContext("2d");
-		observer.observe(canvas);
+		// Observe the container, not the canvas: resizing the canvas bitmap
+		// changes the canvas box and would retrigger the observer endlessly.
+		observer.observe(canvasContainerDiv);
 
 		if (selectedBox < 0 && value !== null && value.boxes.length > 0) {
 			selectBox(0);
@@ -717,7 +756,7 @@
 	on:keydown={handleKeyPress}
 	on:click={() => annotatorContainerDiv.focus()}
 >
-	<div class="canvas-container">
+	<div class="canvas-container" bind:this={canvasContainerDiv}>
 		<canvas
 			bind:this={canvas}
 			on:pointerdown={handlePointerDown}
